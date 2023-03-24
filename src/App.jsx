@@ -1,13 +1,18 @@
 import { useState } from "react";
 import "./App.css";
 import Splash from "./screens/splash/Splash";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Auth from "./screens/landLordScreens/authentication/Auth";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <div className="App">
-      <Splash />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Splash />} />
+          <Route path="/auth" element={<Auth />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
