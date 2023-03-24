@@ -17,6 +17,7 @@ import Notes from "../notes/Notes";
 import Vacancy from "../vacancy/Vacancy";
 import Help from "../help/Help";
 import Profile from "../profile/Profile";
+import Overview from "../overview/Overview";
 
 const Dashboard = () => {
   // tabs navigation states
@@ -31,7 +32,7 @@ const Dashboard = () => {
 
   // changing screen states
   const prevScreen = JSON.parse(localStorage.getItem("newscreen"));
-  const [screen, setScreen] = useState(prevScreen);
+  const [screen, setScreen] = useState(prevScreen || "overview");
   const [showscreen, setShowScreen] = useState("");
 
   const changeScreen = () => {
@@ -150,14 +151,17 @@ const Dashboard = () => {
           </div>
         </div>
         {/* other screens */}
-        <div className="flex-[0.8] bg-slate-200">
-          {showscreen === "properties" && <Properties />}
-          {showscreen === "tenants" && <Tenants />}
-          {showscreen === "maintenance" && <Maintenance />}
-          {showscreen === "notes" && <Notes />}
-          {showscreen === "vacancy" && <Vacancy />}
-          {showscreen === "help" && <Help />}
-          {showscreen === "profile" && <Profile />}
+        <div className="flex-[0.8] bg-slate-50 pl-[2em] pt-[2em] pr-[2em]">
+          <div>
+            {showscreen === "overview" && <Overview />}
+            {showscreen === "properties" && <Properties />}
+            {showscreen === "tenants" && <Tenants />}
+            {showscreen === "maintenance" && <Maintenance />}
+            {showscreen === "notes" && <Notes />}
+            {showscreen === "vacancy" && <Vacancy />}
+            {showscreen === "help" && <Help />}
+            {showscreen === "profile" && <Profile />}
+          </div>
         </div>
       </div>
     </div>
