@@ -1,0 +1,17 @@
+.listItem {
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+}
+
+.listItem:hover {
+  color: #146c94;
+}
+
+.listBtn {
+  background-color: #19a7ce;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+}
