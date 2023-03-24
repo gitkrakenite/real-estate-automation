@@ -7,7 +7,7 @@ import {
 } from "react-icons/ai";
 
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 // import { login, reset } from "../../features/auth/authSlice";
 import { toast } from "react-hot-toast";
 // import Spinner from "../Spinner";
@@ -19,7 +19,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   //   const { user, isLoading, isError, isSuccess, message } = useSelector(
   //     (state) => state.auth
@@ -61,7 +61,7 @@ const Login = () => {
         <div className=" hidden lg:flex flex-[0.4] ">
           <div className="relative group">
             <img
-              src="https://images.pexels.com/photos/14348416/pexels-photo-14348416.jpeg?auto=compress&cs=tinysrgb&w=1600"
+              src="https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1600"
               alt=""
               className="rounded-lg"
             />
@@ -72,9 +72,8 @@ const Login = () => {
               <div className="absolute w-full h-full bottom-[8px] left-[16px]  pl-[1em] pr-[1em] flex flex-col justify-end text-white">
                 {/* content */}
                 <p className="text-lg">
-                  The number one platform for farmers. Join our community for
-                  all your needs. Learn from the experts, sell your products
-                  directly to customers and so much more
+                  Manage all your properties in one platform. Enjoy offers and
+                  most of all real time feedback and 24/7 support
                 </p>
               </div>
             </div>
@@ -89,7 +88,9 @@ const Login = () => {
               {/* email */}
               <div className="flex p-[10px] ml-[20px] items-center justify-between bg-slate-200 rounded-xl">
                 <div className="flex flex-col gap-[6px]">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email" style={{ fontWeight: 600 }}>
+                    Email
+                  </label>
                   <input
                     id="email"
                     type="email"
@@ -109,7 +110,9 @@ const Login = () => {
               {/* password */}
               <div className="flex p-[10px]  ml-[20px] items-center justify-between bg-slate-200 rounded-xl">
                 <div className="flex flex-col gap-[6px]">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password" style={{ fontWeight: 600 }}>
+                    Password
+                  </label>
                   <input
                     type={show ? "text" : "password"}
                     placeholder="Create password"
@@ -151,7 +154,7 @@ const Login = () => {
               )} */}
               <button
                 type="submit"
-                className="bg-green-700  ml-[20px] p-[10px] text-slate-200 rounded-lg"
+                className="bg-[#146C94]  ml-[20px] p-[10px] text-slate-200 rounded-lg"
                 //   onClick={handleSubmit}
               >
                 Sign In

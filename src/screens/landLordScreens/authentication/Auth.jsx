@@ -15,12 +15,12 @@ const Auth = () => {
           {/* options */}
           <div className="w-[90%] m-auto">
             {show ? (
-              <div className="flex gap-[1em] mt-[1em] items-center justify-end">
+              <div className="flex gap-[1em] mt-[1em] items-center justify-end text-md">
                 <div className=" p-[10px]">
                   <p>
                     New Here ?{" "}
                     <span
-                      className="text-green-700"
+                      className="text-[#19A7CE]"
                       style={{
                         fontWeight: 700,
                         letterSpacing: "1px",
@@ -37,7 +37,7 @@ const Auth = () => {
                     Go back to{" "}
                     <Link to="/">
                       <span
-                        className="text-green-700"
+                        className="text-[#19A7CE]"
                         style={{
                           fontWeight: 700,
                           letterSpacing: "1px",
@@ -56,7 +56,7 @@ const Auth = () => {
                   <p>
                     Already a member ?{" "}
                     <span
-                      className="text-green-700"
+                      className="text-[#19A7CE]"
                       style={{
                         fontWeight: 700,
                         letterSpacing: "1px",
@@ -73,7 +73,7 @@ const Auth = () => {
                     Go back to{" "}
                     <Link to="/">
                       <span
-                        className="text-green-700"
+                        className="text-[#19A7CE]"
                         style={{
                           fontWeight: 700,
                           letterSpacing: "1px",
