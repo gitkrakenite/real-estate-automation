@@ -4,6 +4,7 @@ import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
   AiOutlineMail,
+  AiOutlinePhone,
 } from "react-icons/ai";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -15,8 +16,8 @@ import { toast } from "react-hot-toast";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [category, setCategory] = useState("");
   const [password, setPassword] = useState("");
+  const [number, setNumber] = useState("");
 
   const [show, setShow] = useState(false);
 
@@ -111,6 +112,26 @@ const Register = () => {
                 </div>
                 <div>
                   <AiOutlineMail className="text-2xl" />
+                </div>
+              </div>
+              {/* phone number */}
+              <div className="flex p-[10px] mr-[20px] items-center justify-between bg-slate-200 rounded-xl">
+                <div className="flex flex-col gap-[6px]">
+                  <label htmlFor="number" style={{ fontWeight: 600 }}>
+                    Phone number
+                  </label>
+                  <input
+                    id="number"
+                    type="text"
+                    placeholder="Enter your phone number"
+                    required
+                    className="bg-transparent outline-none"
+                    value={number}
+                    onChange={(e) => setNumber(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <AiOutlinePhone className="text-2xl" />
                 </div>
               </div>
               {/* password */}
