@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./dashboard.css";
 import { AiOutlinePlus } from "react-icons/ai";
 import { GiSpanner } from "react-icons/gi";
@@ -10,6 +10,13 @@ import {
   BsPen,
   BsDoorOpen,
 } from "react-icons/bs";
+import Properties from "../properties/Properties";
+import Tenants from "../tenants/Tenants";
+import Maintenance from "../maintenance/Maintenance";
+import Notes from "../notes/Notes";
+import Vacancy from "../vacancy/Vacancy";
+import Help from "../help/Help";
+import Profile from "../profile/Profile";
 
 const Dashboard = () => {
   // tabs navigation states
@@ -22,7 +29,21 @@ const Dashboard = () => {
   const [help, setHelp] = useState(false);
   const [profile, setProfile] = useState(false);
 
-  // navigation functions
+  // changing screen states
+  const prevScreen = JSON.parse(localStorage.getItem("newscreen"));
+  const [screen, setScreen] = useState(prevScreen);
+  const [showscreen, setShowScreen] = useState("");
+
+  const changeScreen = () => {
+    localStorage.setItem("newscreen", JSON.stringify(screen));
+  };
+
+  useEffect(() => {
+    changeScreen();
+    // get screen from localstorage
+    const currentscreen = JSON.parse(localStorage.getItem("newscreen"));
+    setShowScreen(currentscreen);
+  }, [screen]);
 
   return (
     <div className="h-[100vh] overflow-y-scroll">
@@ -47,6 +68,7 @@ const Dashboard = () => {
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
+              onClick={() => setScreen("overview")}
             >
               <p>
                 <BsStackOverflow />
@@ -56,6 +78,7 @@ const Dashboard = () => {
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
+              onClick={() => setScreen("properties")}
             >
               <p>
                 <BsBuildings />
@@ -65,6 +88,7 @@ const Dashboard = () => {
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
+              onClick={() => setScreen("tenants")}
             >
               <p>
                 <BsPeople />
@@ -74,6 +98,7 @@ const Dashboard = () => {
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
+              onClick={() => setScreen("maintenance")}
             >
               <p>
                 <GiSpanner />
@@ -83,6 +108,7 @@ const Dashboard = () => {
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
+              onClick={() => setScreen("notes")}
             >
               <p>
                 <BsPen />
@@ -92,6 +118,7 @@ const Dashboard = () => {
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
+              onClick={() => setScreen("vacancy")}
             >
               <p>
                 <BsDoorOpen />
@@ -101,13 +128,17 @@ const Dashboard = () => {
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
+              onClick={() => setScreen("help")}
             >
               <p>
                 <BiHelpCircle />
               </p>
               <p>Help</p>
             </div>
-            <div className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2">
+            <div
+              className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2"
+              onClick={() => setScreen("profile")}
+            >
               <img
                 src="https://images.pexels.com/photos/209296/pexels-photo-209296.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
@@ -119,7 +150,15 @@ const Dashboard = () => {
           </div>
         </div>
         {/* other screens */}
-        <div className="flex-[0.8] bg-slate-200"></div>
+        <div className="flex-[0.8] bg-slate-200">
+          {showscreen === "properties" && <Properties />}
+          {showscreen === "tenants" && <Tenants />}
+          {showscreen === "maintenance" && <Maintenance />}
+          {showscreen === "notes" && <Notes />}
+          {showscreen === "vacancy" && <Vacancy />}
+          {showscreen === "help" && <Help />}
+          {showscreen === "profile" && <Profile />}
+        </div>
       </div>
     </div>
   );
