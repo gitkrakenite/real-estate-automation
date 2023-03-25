@@ -50,7 +50,7 @@ const Dashboard = () => {
     <div className="h-[100vh] overflow-y-scroll">
       <div className="flex">
         {/* panel */}
-        <div className="flex-[0.2] bg-[#146C94] h-[100vh] px-[2em] py-[2em]">
+        <div className="flex-[0.2] bg-[#146C94] min-h-[100vh] px-[2em] py-[2em]">
           <div className="mb-[2em] flex justify-between items-center">
             <div>
               <h2
