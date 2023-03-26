@@ -521,6 +521,12 @@ const Properties = () => {
                       </p>
                       <p>Edit A5</p>
                     </div>
+                    <div className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1">
+                      <p>
+                        <BsPen className="" />
+                      </p>
+                      <p>Delete A5</p>
+                    </div>
                   </div>
                 </div>
                 {/*  */}

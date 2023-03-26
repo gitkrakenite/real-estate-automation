@@ -18,6 +18,7 @@ import Vacancy from "../vacancy/Vacancy";
 import Help from "../help/Help";
 import Profile from "../profile/Profile";
 import Overview from "../overview/Overview";
+import LandLord from "../landlord/LandLord";
 
 const Dashboard = () => {
   // tabs navigation states
@@ -124,7 +125,17 @@ const Dashboard = () => {
               <p>
                 <BsDoorOpen />
               </p>
-              <p>Post Vacancy</p>
+              <p>Vacate Tenant</p>
+            </div>
+            <div
+              className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
+              style={{ borderBottom: "1px solid white" }}
+              onClick={() => setScreen("landlord")}
+            >
+              <p>
+                <BsPeople />
+              </p>
+              <p>LandLords</p>
             </div>
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
@@ -159,6 +170,7 @@ const Dashboard = () => {
             {showscreen === "maintenance" && <Maintenance />}
             {showscreen === "notes" && <Notes />}
             {showscreen === "vacancy" && <Vacancy />}
+            {showscreen === "landlord" && <LandLord />}
             {showscreen === "help" && <Help />}
             {showscreen === "profile" && <Profile />}
           </div>
