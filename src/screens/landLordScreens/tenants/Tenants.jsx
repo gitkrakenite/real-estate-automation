@@ -43,44 +43,43 @@ const Tenants = () => {
           </div>
         </div>
         {/*  */}
-        {showCreateTenant ||
-          (updateTenant && (
-            <div className="mb-[1em]">
-              <form className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="name"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Full Name of the Tenant
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="i.e John Doe"
-                    id="name"
-                    required
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="imgUrl"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Tenant's profile if any
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="image url"
-                    id="imgUrl"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  />
-                </div>
-                {/* <div className="flex flex-col gap-2">
+        {showCreateTenant && (
+          <div className="mb-[1em]">
+            <form className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="name"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Full Name of the Tenant
+                </label>
+                <input
+                  type="text"
+                  placeholder="i.e John Doe"
+                  id="name"
+                  required
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="imgUrl"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Tenant's profile if any
+                </label>
+                <input
+                  type="text"
+                  placeholder="image url"
+                  id="imgUrl"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              {/* <div className="flex flex-col gap-2">
                 <label
                   htmlFor="idUrl"
                   style={{ fontWeight: 700 }}
@@ -96,188 +95,423 @@ const Tenants = () => {
                   className="p-[8px] rounded-md"
                 />
               </div> */}
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="email"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="i.e johndoe@gmail.com"
-                    id="numberOfUnits"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="number"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Phone Number
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Tenants phone or mobile"
-                    id="number"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="kra"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    KRA pin
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="full kra pin"
-                    id="kra"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="marital"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Marital Status
-                  </label>
-                  <select
-                    name=""
-                    id="marital"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  >
-                    <option value="">Choose</option>
-                    <option value="single">Single</option>
-                    <option value="married">Married</option>
-                    <option value="separated">Separated</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="pets"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Any Pets
-                  </label>
-                  <select
-                    name=""
-                    id="marital"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  >
-                    <option value="">Choose</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">no</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="property"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Property To Occupy
-                  </label>
-                  <select
-                    name=""
-                    id="property"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  >
-                    <option value="">Choose</option>
-                    <option value="heri">Heri Homes</option>
-                    <option value="mexico">Mexico Hostels</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="unit"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Unit in Heri Assigned to Tenant
-                  </label>
-                  <select
-                    name=""
-                    id="unit"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  >
-                    <option value="">Choose</option>
-                    <option value="a5 block 3">A5 block 3</option>
-                    <option value="c5 block 2">C2 block 6</option>
-                    <option value="C5 block 2">C5 block 2</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="unit"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Paid All Deposits
-                  </label>
-                  <select
-                    name=""
-                    id="unit"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  >
-                    <option value="">Choose</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                    <option value="Partial">Partial</option>
-                  </select>
-                </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="email"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="i.e johndoe@gmail.com"
+                  id="numberOfUnits"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="number"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  placeholder="Tenants phone or mobile"
+                  id="number"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="kra"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  KRA pin
+                </label>
+                <input
+                  type="text"
+                  placeholder="full kra pin"
+                  id="kra"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="marital"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Marital Status
+                </label>
+                <select
+                  name=""
+                  id="marital"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="single">Single</option>
+                  <option value="married">Married</option>
+                  <option value="separated">Separated</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="pets"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Any Pets
+                </label>
+                <select
+                  name=""
+                  id="marital"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">no</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="property"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Property To Occupy
+                </label>
+                <select
+                  name=""
+                  id="property"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="heri">Heri Homes</option>
+                  <option value="mexico">Mexico Hostels</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="unit"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Unit in Heri Assigned to Tenant
+                </label>
+                <select
+                  name=""
+                  id="unit"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="a5 block 3">A5 block 3</option>
+                  <option value="c5 block 2">C2 block 6</option>
+                  <option value="C5 block 2">C5 block 2</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="unit"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Paid All Deposits
+                </label>
+                <select
+                  name=""
+                  id="unit"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Partial">Partial</option>
+                </select>
+              </div>
 
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="unpaidDues"
-                    style={{ fontWeight: 700 }}
-                    className="text-md"
-                  >
-                    Total Unpaid Dues
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Total unpaid in Ksh."
-                    id="unpaidDues"
-                    style={{ border: "1px solid black" }}
-                    className="p-[8px] rounded-md"
-                  />
-                </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="unpaidDues"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Total Unpaid Dues
+                </label>
+                <input
+                  type="number"
+                  placeholder="Total unpaid in Ksh."
+                  id="unpaidDues"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
 
-                <div>
-                  <button className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full">
-                    Create Property Now
-                  </button>
-                </div>
-                <div>
-                  <p
-                    className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer text-center w-full"
-                    // onClick={() => setShowCreateProperty(!showCreateProperty)}
-                  >
-                    Hide this section
-                  </p>
-                </div>
-              </form>
-            </div>
-          ))}
+              <div>
+                <button className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full">
+                  Create Tenant Now
+                </button>
+              </div>
+              <div>
+                <p
+                  className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                  // onClick={() => setShowCreateProperty(!showCreateProperty)}
+                >
+                  Hide this section
+                </p>
+              </div>
+            </form>
+          </div>
+        )}
         <h2 className="mb-[1em] text-2xl">You have A total Of 3 Tenants</h2>
+
+        {/* update Tenant */}
+        {updateTenant && (
+          <div className="mb-[1em]">
+            <form className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="name"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Full Name of the Tenant
+                </label>
+                <input
+                  type="text"
+                  placeholder="i.e John Doe"
+                  id="name"
+                  required
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="imgUrl"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Tenant's profile if any
+                </label>
+                <input
+                  type="text"
+                  placeholder="image url"
+                  id="imgUrl"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              {/* <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="idUrl"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  ID Photo upload
+                </label>
+                <input
+                  type="text"
+                  placeholder="image url"
+                  id="imgUrl"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div> */}
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="email"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="i.e johndoe@gmail.com"
+                  id="numberOfUnits"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="number"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  placeholder="Tenants phone or mobile"
+                  id="number"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="kra"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  KRA pin
+                </label>
+                <input
+                  type="text"
+                  placeholder="full kra pin"
+                  id="kra"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="marital"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Marital Status
+                </label>
+                <select
+                  name=""
+                  id="marital"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="single">Single</option>
+                  <option value="married">Married</option>
+                  <option value="separated">Separated</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="pets"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Any Pets
+                </label>
+                <select
+                  name=""
+                  id="marital"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">no</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="property"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Property To Occupy
+                </label>
+                <select
+                  name=""
+                  id="property"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="heri">Heri Homes</option>
+                  <option value="mexico">Mexico Hostels</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="unit"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Unit in Heri Assigned to Tenant
+                </label>
+                <select
+                  name=""
+                  id="unit"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="a5 block 3">A5 block 3</option>
+                  <option value="c5 block 2">C2 block 6</option>
+                  <option value="C5 block 2">C5 block 2</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="unit"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Paid All Deposits
+                </label>
+                <select
+                  name=""
+                  id="unit"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                >
+                  <option value="">Choose</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Partial">Partial</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="unpaidDues"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Total Unpaid Dues
+                </label>
+                <input
+                  type="number"
+                  placeholder="Total unpaid in Ksh."
+                  id="unpaidDues"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                />
+              </div>
+
+              <div>
+                <button className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full">
+                  Update Tenant
+                </button>
+              </div>
+              <div>
+                <p
+                  className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                  onClick={() => setUpdateTenant(false)}
+                >
+                  Hide this section
+                </p>
+              </div>
+            </form>
+          </div>
+        )}
 
         {/* tenant info */}
         <div className="flex gap-4 flex-wrap ">

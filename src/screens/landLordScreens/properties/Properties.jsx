@@ -10,6 +10,7 @@ const Properties = () => {
   const [showCreateUnit, setShowCreateUnit] = useState(false);
   const [showUnits, setShowUnits] = useState(false);
   const [currentunitName, setCurrentUnitName] = useState("");
+  const [updateUnit, setUpdateUnit] = useState("");
 
   const handleUnits = (unitName) => {
     // alert(unitName);
@@ -219,8 +220,8 @@ const Properties = () => {
               </div>
               <div className="mt-3">
                 <div className="flex items-center gap-[20px]">
-                  <div>Investor Name: Mr.Scott Luvaha</div>
-                  <div>Investor Email: scott@gmail.com</div>
+                  <div>LandLord Name: Mr.Scott Luvaha</div>
+                  <div>Landlord Email: scott@gmail.com</div>
                 </div>
               </div>
             </div>
@@ -287,8 +288,8 @@ const Properties = () => {
               </div>
               <div className="mt-3">
                 <div className="flex items-center gap-[20px]">
-                  <div>Investor Name: Mr.Scott Luvaha</div>
-                  <div>Investor Email: scott@gmail.com</div>
+                  <div>LandLord Name: Mr.Scott Luvaha</div>
+                  <div>Landlord Email: scott@gmail.com</div>
                 </div>
               </div>
             </div>
@@ -469,7 +470,159 @@ const Properties = () => {
                   </form>
                 </div>
               )}
-              {/*  */}
+
+              {/* update details Form  */}
+              {updateUnit && (
+                <div>
+                  <form className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="name"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Name of the unit
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="i.e A5, C4"
+                        id="name"
+                        required
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="rent"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Rent Amount per Month
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="Amount in ksh."
+                        id="rent"
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="rentDeposit"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Rent Deposit
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="one time deposit"
+                        id="rentDeposit"
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="waterDeposit"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Water Deposit if any
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter deposit"
+                        id="location"
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="investorname"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Investor for this Unit
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter investor name"
+                        id="investorname"
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="extraFee"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Total extra fee apart from rent
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="Extra fee apart from rent"
+                        id="extraFee"
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="waterReading"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Latest Water Reading
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Updated Water Reading"
+                        id="waterReading"
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="status"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Vacant or Occupied ?
+                      </label>
+                      <select
+                        id="status"
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                      >
+                        <option value="occupied">Occupied</option>
+                        <option value="vacant">Vacant</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <button className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full">
+                        Update Unit Now
+                      </button>
+                    </div>
+                    <div>
+                      <p
+                        className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                        onClick={() => setUpdateUnit(false)}
+                      >
+                        Hide this section
+                      </p>
+                    </div>
+                  </form>
+                </div>
+              )}
+
               {/* display mexico units */}
               <div className="unitWrapper">
                 {/*  */}
@@ -515,7 +668,10 @@ const Properties = () => {
                         Occupied
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 cursor-pointer">
+                    <div
+                      className="flex items-center gap-2 cursor-pointer"
+                      onClick={() => setUpdateUnit(!updateUnit)}
+                    >
                       <p>
                         <BsPen className="text-[#146C94]" />
                       </p>
