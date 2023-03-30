@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BsBuildings, BsPen } from "react-icons/bs";
+import { BsBuildings, BsPen, BsTrash } from "react-icons/bs";
 import { MdGpsNotFixed } from "react-icons/md";
 import { GoLocation } from "react-icons/go";
 import "./properties.css";
@@ -32,6 +32,7 @@ const Properties = () => {
   const [landlordEmailAddress, setLandlordEmailAddress] = useState("");
   const [landlordPhoneNumber, setLandlordPhoneNumber] = useState("");
   const [landlordKraPin, setLandlordKraPin] = useState("");
+  const [deleteProperty, setDeleteProperty] = useState("");
 
   // updatePropertyFields
   const [updatepropertyName, setupdatePropertyName] = useState("");
@@ -60,7 +61,13 @@ const Properties = () => {
     setLandlordEmailAddress(updatelandlordEmailAddress);
     setLandlordPhoneNumber(updatelandlordPhoneNumber);
     setLandlordKraPin(updatelandlordKraPin);
-  }, [updatepropertyName, updatepropertyImg, updatelandlordPhoneNumber]);
+    setDeleteProperty("hidden");
+  }, [
+    updatepropertyName,
+    updatepropertyImg,
+    updatelandlordPhoneNumber,
+    deleteProperty,
+  ]);
 
   const handleUpdateProperty = async (e) => {
     e.preventDefault();
@@ -181,6 +188,23 @@ const Properties = () => {
         setSearchedResults(searchResults);
       }, 500)
     );
+  };
+
+  const handlePropertyDelete = async (propertytoDeleteId) => {
+    // setDeleteProperty("hidden");
+    try {
+      const propertyData = {
+        propertyStatus: deleteProperty,
+      };
+      console.log(propertyData);
+      console.log(deleteProperty);
+      await axios.put("/property/" + propertytoDeleteId, propertyData);
+      toast.success("Deleted Succesfully");
+      setLoading(!loading);
+      setShowUpdateProperty(false);
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   useEffect(() => {
@@ -966,6 +990,14 @@ const Properties = () => {
                                     className="bg-[#146C94] text-white p-[5px] text-2xl rounded-md"
                                   />
                                 </div>
+                              </div>
+                              <div
+                                onClick={() => handlePropertyDelete(item._id)}
+                              >
+                                <BsTrash
+                                  title={`Delete ${item.propertyName}`}
+                                  className="bg-red-500 text-white p-[5px] text-2xl rounded-md"
+                                />
                               </div>
                             </div>
                           </div>
