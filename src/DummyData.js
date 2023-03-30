@@ -66,3 +66,66 @@ export const dummyTenant = [
     vacateDate: "10th June 2021",
   },
 ];
+
+export const dummyProperty = [
+  {
+    id: 1,
+    propertyName: "Heri Hostels",
+    propertyImg:
+      "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    unitsNo: 3,
+    propertyLocation: "Athi Daystar Campus",
+    gpsCoordinates: "ss212 9928",
+    landlordName: "Phillip Kimani",
+    landLordProfile:
+      "https://images.pexels.com/photos/10057618/pexels-photo-10057618.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    landlordEmailAddress: "phillip@gmail.com",
+    landlordPhoneNumber: "07896 7699",
+    landlordKraPin: "73782399022",
+  },
+  {
+    id: 2,
+    propertyName: "Rawa Hostels",
+    propertyImg:
+      "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    unitsNo: 3,
+    propertyLocation: "Athi Daystar Campus",
+    gpsCoordinates: "ss212 9928",
+    landlordName: "Stacy Wendy",
+    landLordProfile:
+      "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    landlordEmailAddress: "stacy@gmail.com",
+    landlordPhoneNumber: "07896 7699",
+    landlordKraPin: "73782399022",
+  },
+  {
+    id: 3,
+    propertyName: "Kryptons Hostel",
+    propertyImg:
+      "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    unitsNo: 3,
+    propertyLocation: "Athi Daystar Campus",
+    gpsCoordinates: "ss212 9928",
+    landlordName: "Alex Wambua",
+    landLordProfile:
+      "https://images.pexels.com/photos/5668870/pexels-photo-5668870.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    landlordEmailAddress: "alex@gmail.com",
+    landlordPhoneNumber: "07896 7699",
+    landlordKraPin: "73782399022",
+  },
+  {
+    id: 3,
+    propertyName: "Kryptons Hostel",
+    propertyImg:
+      "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    unitsNo: 3,
+    propertyLocation: "Athi Daystar Campus",
+    gpsCoordinates: "ss212 9928",
+    landlordName: "Alex Wambua",
+    landLordProfile:
+      "https://images.pexels.com/photos/5668870/pexels-photo-5668870.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    landlordEmailAddress: "alex@gmail.com",
+    landlordPhoneNumber: "07896 7699",
+    landlordKraPin: "73782399022",
+  },
+];

@@ -514,81 +514,85 @@ const Tenants = () => {
         )}
 
         {/* tenant info */}
-        <div className="flex gap-4 flex-wrap ">
-          {dummyTenant?.map((item) => (
-            <div key={item.id} className="unitShadow p-3 rounded-md">
-              <div className="flex justify-center mb-3">
-                <img
-                  src={item.profile}
-                  alt=""
-                  className="w-[60px] h-[60px] object-cover rounded-full"
-                />
+        <div className="h-[70vh] overflow-y-scroll">
+          <div className="flex gap-4 flex-wrap ">
+            {dummyTenant?.map((item) => (
+              <div key={item.id} className="unitShadow p-3 rounded-md">
+                <div className="flex justify-center mb-3">
+                  <img
+                    src={item.profile}
+                    alt=""
+                    className="w-[60px] h-[60px] object-cover rounded-full"
+                  />
+                </div>
+                <div className="flex justify-between mb-1 mt-1">
+                  <p>
+                    Name: <span style={{ fontWeight: 700 }}> {item.name}</span>
+                  </p>
+                  <p>
+                    Email:{" "}
+                    <a href="mailto:phillip@gmail.com">
+                      <span style={{ fontWeight: 700 }}>{item.email}</span>
+                    </a>
+                  </p>
+                </div>
+                <div className="flex justify-between mb-1 mt-1">
+                  <p>
+                    Phone: <span style={{ fontWeight: 700 }}>078383832</span>{" "}
+                  </p>
+                  <p>
+                    KRA: <span style={{ fontWeight: 700 }}> 7272xx88ch78h</span>{" "}
+                  </p>
+                </div>
+                <div className="flex justify-between mb-1 mt-1">
+                  <p>
+                    Pet Owner: <span style={{ fontWeight: 700 }}>Yes</span>{" "}
+                  </p>
+                  <p>
+                    Marital Status:{" "}
+                    <span style={{ fontWeight: 700 }}>Single</span>{" "}
+                  </p>
+                </div>
+                <div className="flex justify-between gap-4 mb-1 mt-1">
+                  <p>
+                    Property Assigned:{" "}
+                    <span style={{ fontWeight: 700 }}>{item.property}</span>
+                  </p>
+                  <p>
+                    Unit Assigned:{" "}
+                    <span style={{ fontWeight: 700 }}>{item.unit}</span>
+                  </p>
+                </div>
+                <div className="flex gap-8 mb-1 mt-1">
+                  <p>
+                    Paid Rent Deposit:{" "}
+                    <span style={{ fontWeight: 700 }}>{item.rentDeposit}</span>{" "}
+                  </p>
+                  <p>Paid All Entry Fee: Partial</p>
+                </div>
+                <div>
+                  <p>
+                    Total Unpaid Dues:{" "}
+                    <span style={{ fontWeight: 700 }}>
+                      Ksh.{item.unpaidDues}
+                    </span>{" "}
+                  </p>
+                </div>
+                <div className="h-[4px] bg-zinc-500 mt-3 mb-3 rounded-md" />
+                <div className="flex justify-between">
+                  <button
+                    className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
+                    onClick={() => handleUpdateTenant(item.name)}
+                  >
+                    Update {item.name.split(" ")[0]}
+                  </button>
+                  <button className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer">
+                    Delete Tenant
+                  </button>
+                </div>
               </div>
-              <div className="flex justify-between mb-1 mt-1">
-                <p>
-                  Name: <span style={{ fontWeight: 700 }}> {item.name}</span>
-                </p>
-                <p>
-                  Email:{" "}
-                  <a href="mailto:phillip@gmail.com">
-                    <span style={{ fontWeight: 700 }}>{item.email}</span>
-                  </a>
-                </p>
-              </div>
-              <div className="flex justify-between mb-1 mt-1">
-                <p>
-                  Phone: <span style={{ fontWeight: 700 }}>078383832</span>{" "}
-                </p>
-                <p>
-                  KRA: <span style={{ fontWeight: 700 }}> 7272xx88ch78h</span>{" "}
-                </p>
-              </div>
-              <div className="flex justify-between mb-1 mt-1">
-                <p>
-                  Pet Owner: <span style={{ fontWeight: 700 }}>Yes</span>{" "}
-                </p>
-                <p>
-                  Marital Status:{" "}
-                  <span style={{ fontWeight: 700 }}>Single</span>{" "}
-                </p>
-              </div>
-              <div className="flex justify-between gap-4 mb-1 mt-1">
-                <p>
-                  Property Assigned:{" "}
-                  <span style={{ fontWeight: 700 }}>{item.property}</span>
-                </p>
-                <p>
-                  Unit Assigned:{" "}
-                  <span style={{ fontWeight: 700 }}>{item.unit}</span>
-                </p>
-              </div>
-              <div className="flex gap-8 mb-1 mt-1">
-                <p>
-                  Paid Rent Deposit:{" "}
-                  <span style={{ fontWeight: 700 }}>{item.rentDeposit}</span>{" "}
-                </p>
-                <p>Paid All Entry Fee: Partial</p>
-              </div>
-              <div>
-                <p>
-                  Total Unpaid Dues:{" "}
-                  <span style={{ fontWeight: 700 }}>Ksh.{item.unpaidDues}</span>{" "}
-                </p>
-              </div>
-              <div className="h-[4px] bg-zinc-500 mt-3 mb-3 rounded-md" />
-              <div className="flex justify-between">
-                <button
-                  className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
-                  onClick={() => handleUpdateTenant(item.name)}
-                >
-                  Update {item.name.split(" ")[0]}
-                </button>
-                <button className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer">
-                  Delete Tenant
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

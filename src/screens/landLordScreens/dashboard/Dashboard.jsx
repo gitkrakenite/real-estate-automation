@@ -170,7 +170,7 @@ const Dashboard = () => {
             {showscreen === "maintenance" && <Maintenance />}
             {showscreen === "notes" && <Notes />}
             {showscreen === "vacancy" && <Vacancy />}
-            {showscreen === "landlord" && <LandLord />}
+            {/* {showscreen === "landlord" && <LandLord />} */}
             {showscreen === "help" && <Help />}
             {showscreen === "profile" && <Profile />}
           </div>
