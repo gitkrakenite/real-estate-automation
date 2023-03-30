@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsBuildings, BsPen } from "react-icons/bs";
 import { MdGpsNotFixed } from "react-icons/md";
 import { GoLocation } from "react-icons/go";
 import "./properties.css";
 import { dummyProperty } from "../../../DummyData";
+import { useDispatch, useSelector } from "react-redux";
+import { getProperty } from "../../../features/property/propertySlice";
+import { toast } from "react-hot-toast";
+import Spinner from "../../../components/Spinner";
+import moment from "moment";
+import { createProperty } from "../../../features/property/propertySlice";
 
 const Properties = () => {
   const [showCreateProperty, setShowCreateProperty] = useState(false);
@@ -13,14 +19,145 @@ const Properties = () => {
   const [currentunitName, setCurrentUnitName] = useState("");
   const [updateUnit, setUpdateUnit] = useState("");
 
+  // create Property states
+  const [propertyName, setPropertyName] = useState("");
+  const [propertyImg, setPropertyImg] = useState("");
+  const [unitsNo, setUnitsNo] = useState("");
+  const [propertyLocation, setPropertyLocation] = useState("");
+  const [gpsCoordinates, setGpsCoordinates] = useState("");
+  const [landlordName, setLandlordName] = useState("");
+  const [landLordProfile, setLandLordProfile] = useState("");
+  const [landlordEmailAddress, setLandlordEmailAddress] = useState("");
+  const [landlordPhoneNumber, setLandlordPhoneNumber] = useState("");
+  const [landlordKraPin, setLandlordKraPin] = useState("");
+
+  // updatePropertyFields
+  const [updatepropertyName, setupdatePropertyName] = useState("");
+  const [updatepropertyImg, setupdatePropertyImg] = useState("");
+  const [updateunitsNo, setupdateUnitsNo] = useState("");
+  const [updatepropertyLocation, setupdatePropertyLocation] = useState("");
+  const [updategpsCoordinates, setupdateGpsCoordinates] = useState("");
+  const [updatelandlordName, setupdateLandlordName] = useState("");
+  const [updatelandLordProfile, setupdateLandLordProfile] = useState("");
+  const [updatelandlordEmailAddress, setupdateLandlordEmailAddress] =
+    useState("");
+  const [updatelandlordPhoneNumber, setupdateLandlordPhoneNumber] =
+    useState("");
+  const [updatelandlordKraPin, setupdateLandlordKraPin] = useState("");
+
+  const dispatch = useDispatch();
+
   const handleUnits = (unitName) => {
     // alert(unitName);
     setCurrentUnitName(unitName);
     setShowUnits(true);
   };
 
+  const { user } = useSelector((state) => state.auth);
+
+  const { property, isError, isSuccess, isLoading } = useSelector(
+    (state) => state.properties
+  );
+
+  const handleClear = () => {
+    setPropertyName("");
+    setPropertyImg("");
+    setUnitsNo("");
+    setPropertyLocation("");
+    setGpsCoordinates("");
+    setLandlordName("");
+    setLandLordProfile("");
+    setLandlordEmailAddress("");
+    setLandlordPhoneNumber("");
+    setLandlordKraPin("");
+  };
+
+  const handleCreateProperty = (e) => {
+    e.preventDefault();
+
+    if (
+      !propertyName ||
+      !propertyImg ||
+      !unitsNo ||
+      !propertyLocation ||
+      !landlordName ||
+      !landlordEmailAddress ||
+      !landlordPhoneNumber ||
+      !landlordKraPin
+    ) {
+      toast.error("Some fields missing details");
+      return;
+    }
+
+    try {
+      const propertyData = {
+        propertyName,
+        propertyImg,
+        unitsNo,
+        propertyLocation,
+        gpsCoordinates,
+        landlordName,
+        landLordProfile,
+        landlordEmailAddress,
+        landlordPhoneNumber,
+        landlordKraPin,
+      };
+
+      dispatch(createProperty(propertyData));
+      handleClear();
+      setShowCreateProperty(false);
+
+      toast.success("Sent successfully");
+    } catch (error) {
+      toast.error("Error occured: " + message);
+    }
+  };
+
+  // search
+  const [searchText, setSearchText] = useState("");
+  const [searchTimeout, setsearchTimeout] = useState(null);
+  const [searchedResults, setSearchedResults] = useState(null);
+
+  const handleSearchChange = async (e) => {
+    e.preventDefault();
+    clearTimeout(setsearchTimeout);
+
+    setSearchText(e.target.value);
+
+    setsearchTimeout(
+      setTimeout(() => {
+        const searchResults = property?.filter(
+          (item) =>
+            item.propertyName
+              .toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            item.propertyLocation
+              .toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            item.landlordName.toLowerCase().includes(searchText.toLowerCase())
+        );
+
+        setSearchedResults(searchResults);
+      }, 500)
+    );
+  };
+
+  useEffect(() => {
+    dispatch(getProperty());
+  }, [isError, isSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Error occurred: " + message);
+    }
+
+    if (isSuccess) {
+      toast.success("Properties Found!");
+    }
+  }, [property, isError, isSuccess, dispatch]);
+
   return (
-    <div>
+    <div className="">
       <h2 className="text-2xl mb-1" style={{ fontWeight: 700 }}>
         Manage All Your Properties
       </h2>
@@ -28,12 +165,15 @@ const Properties = () => {
 
       {/* search form */}
       <div className="mt-[2em] mb-[2em] flex gap-10">
-        <form className="w-[30%]">
+        <form className="w-[32%]">
           <div className="flex items-center gap-4 w-full justify-between bg-zinc-300 p-2 rounded-md">
             <input
               type="text"
               placeholder="Search Anything"
               className="bg-transparent outline-none"
+              required
+              value={searchText}
+              onChange={handleSearchChange}
             />
             <p>
               <AiOutlineSearch className="text-xl" />
@@ -49,12 +189,15 @@ const Properties = () => {
       </div>
 
       {/* manage property */}
-      <div className="flex gap-2">
+      <div className="">
         <div className="">
           {/* create property Sections */}
           {showCreateProperty && (
             <div className="mb-[1em]">
-              <form className="flex flex-col gap-4">
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={handleCreateProperty}
+              >
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="name"
@@ -70,6 +213,10 @@ const Properties = () => {
                     required
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    min={5}
+                    maxLength={30}
+                    value={propertyName}
+                    onChange={(e) => setPropertyName(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -78,7 +225,7 @@ const Properties = () => {
                     style={{ fontWeight: 700 }}
                     className="text-md"
                   >
-                    Image Url
+                    Property Image Url
                   </label>
                   <input
                     type="text"
@@ -86,6 +233,9 @@ const Properties = () => {
                     id="imgUrl"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    required
+                    value={propertyImg}
+                    onChange={(e) => setPropertyImg(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -102,6 +252,9 @@ const Properties = () => {
                     id="numberOfUnits"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    required
+                    value={unitsNo}
+                    onChange={(e) => setUnitsNo(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -118,6 +271,9 @@ const Properties = () => {
                     id="location"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    required
+                    value={propertyLocation}
+                    onChange={(e) => setPropertyLocation(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -126,7 +282,7 @@ const Properties = () => {
                     style={{ fontWeight: 700 }}
                     className="text-md"
                   >
-                    GPS Coordinates if any
+                    GPS Coordinates (Optional)
                   </label>
                   <input
                     type="text"
@@ -134,6 +290,8 @@ const Properties = () => {
                     id="gps"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    value={gpsCoordinates}
+                    onChange={(e) => setGpsCoordinates(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -150,6 +308,9 @@ const Properties = () => {
                     id="landlordName"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    required
+                    value={landlordName}
+                    onChange={(e) => setLandlordName(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -166,6 +327,8 @@ const Properties = () => {
                     id="landlordProfile"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    value={landLordProfile}
+                    onChange={(e) => setLandLordProfile(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -182,6 +345,9 @@ const Properties = () => {
                     id="landlordEmail"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    required
+                    value={landlordEmailAddress}
+                    onChange={(e) => setLandlordEmailAddress(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -198,6 +364,9 @@ const Properties = () => {
                     id="landlordPhone"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    required
+                    value={landlordPhoneNumber}
+                    onChange={(e) => setLandlordPhoneNumber(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -214,11 +383,17 @@ const Properties = () => {
                     id="landlordKra"
                     style={{ border: "1px solid black" }}
                     className="p-[8px] rounded-md"
+                    required
+                    value={landlordKraPin}
+                    onChange={(e) => setLandlordKraPin(e.target.value)}
                   />
                 </div>
 
                 <div>
-                  <button className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full">
+                  <button
+                    className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                    onClick={handleCreateProperty}
+                  >
                     Create Property Now
                   </button>
                 </div>
@@ -234,94 +409,270 @@ const Properties = () => {
             </div>
           )}
 
-          <h2 className="mb-[1em] text-2xl">You have 2 properties</h2>
+          {/* <div className="bg-green-500">sasasa</div> */}
 
-          {/* properties */}
-          <div className="flex flex-wrap gap-[20px] h-[60vh] overflow-y-scroll ">
-            {dummyProperty?.map((property) => (
-              <div className="unitShadow p-2 rounded-md">
-                {/*  */}
-                <div>
-                  <div>
-                    <div
-                      className="flex items-center gap-2 mb-1 text-2xl"
-                      style={{ fontWeight: 600 }}
-                    >
-                      <div className="flex justify-between items-center w-full">
-                        <div className="flex items-center gap-1">
-                          <BsBuildings />
-                          <h2>{property.propertyName}</h2>
-                        </div>
+          {property?.length < 1 ? (
+            <div className="flex flex-1 w-full justify-center items-center  h-[20vh]">
+              <p className="text-2xl">
+                Hello {user?.name} You have No Properties Yet. Create One
+              </p>
+            </div>
+          ) : (
+            <div className=" w-full">
+              <h2 className="mb-[1em] text-2xl">
+                You have {property?.length} properties
+              </h2>
+
+              {searchText && (
+                <h2 className="font-medium text-[#666e75] text-xl mb-3">
+                  Showing Resuls for{" "}
+                  <span className="text-[#222328]">{searchText}</span>:
+                </h2>
+              )}
+
+              {searchText ? (
+                <>
+                  {/* properties */}
+                  <div className="flex flex-wrap gap-[20px] h-[65vh] overflow-y-scroll">
+                    {isLoading && <Spinner message="Fetching Properties" />}
+
+                    {searchedResults?.map((item) => (
+                      <div className="unitShadow p-2 rounded-md" key={item._id}>
+                        {/*  */}
                         <div>
-                          <h2 className="text-zinc-500 text-lg">
-                            Currently: {property.unitsNo} Units
-                          </h2>
+                          <div>
+                            <div
+                              className="flex items-center gap-2 mb-1 text-2xl"
+                              style={{ fontWeight: 600 }}
+                            >
+                              <div className="flex justify-between items-center w-full">
+                                <div className="flex items-center gap-1">
+                                  <BsBuildings />
+                                  <h2>{item.propertyName}</h2>
+                                </div>
+                                <div>
+                                  <h2 className="text-zinc-500 text-lg">
+                                    Currently: {item.unitsNo} Units
+                                  </h2>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <GoLocation />
+                              <p>{item.propertyLocation}</p>
+                            </div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <MdGpsNotFixed />
+                              {!item.gpsCoordinates ? (
+                                <p style={{ fontWeight: 700 }}>
+                                  Coordinates: Unset
+                                </p>
+                              ) : (
+                                <p>Coordinates: {item.gpsCoordinates} </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex justify-center">
+                            <img
+                              src={item.propertyImg}
+                              alt=""
+                              className="w-[400px] h-[240px] object-cover rounded-md"
+                            />
+                          </div>
+
+                          <div className="mt-8">
+                            <h2
+                              className="mb-4 text-xl"
+                              style={{ fontWeight: 600 }}
+                            >
+                              Landlord Details
+                            </h2>
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-[5px]">
+                                <div>
+                                  {!item.landLordProfile ? (
+                                    <p style={{ fontWeight: 700 }}>Unset</p>
+                                  ) : (
+                                    <>
+                                      <img
+                                        src={item.landLordProfile}
+                                        alt=""
+                                        className="h-[60px] w-[60px] object-cover rounded-full"
+                                      />
+                                    </>
+                                  )}
+                                </div>
+                                <div>{item.landlordName}</div>
+                              </div>
+
+                              <div>Landlord KRA: {item.landlordKraPin}</div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <div>
+                                LandLord Email: {item.landlordEmailAddress}
+                              </div>
+                              <div>
+                                Landlord Phone: {item.landlordPhoneNumber}
+                              </div>
+                            </div>
+                            <div className="h-[4px] bg-zinc-500 mt-3 rounded-lg" />
+                            <div className="mt-3">
+                              <div className="flex items-center gap-[20px]">
+                                <div>
+                                  Created {moment(item.createdAt).fromNow()}
+                                </div>
+                                <div>
+                                  Updated {moment(item.updatedAt).fromNow()}
+                                </div>
+                                <div className="cursor-pointer">
+                                  <BsPen
+                                    title={`Edit ${item.propertyName}`}
+                                    className="bg-[#146C94] text-white p-[5px] text-2xl rounded-md"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-3 ">
+                            <div
+                              className="flex items-center bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer gap-2 justify-center"
+                              onClick={() => handleUnits(item.propertyName)}
+                            >
+                              <p>
+                                <BsPen />
+                              </p>
+                              <p>Manage Units</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <GoLocation />
-                      <p>{property.propertyLocation}</p>
-                    </div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <MdGpsNotFixed />
-                      <p>Coordinates: {property.gpsCoordinates} </p>
-                    </div>
+                    ))}
                   </div>
+                </>
+              ) : (
+                <>
+                  {/* properties */}
+                  <div className="flex flex-wrap gap-[20px] h-[65vh] overflow-y-scroll">
+                    {isLoading && <Spinner message="Fetching Properties" />}
 
-                  <div className="flex justify-center">
-                    <img
-                      src={property.propertyImg}
-                      alt=""
-                      className="w-[400px] h-[240px] object-cover rounded-md"
-                    />
-                  </div>
-
-                  <div className="mt-8">
-                    <h2 className="mb-4 text-xl" style={{ fontWeight: 600 }}>
-                      Landlord Details
-                    </h2>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-[5px]">
+                    {property?.map((item) => (
+                      <div className="unitShadow p-2 rounded-md" key={item._id}>
+                        {/*  */}
                         <div>
-                          <img
-                            src={property.landLordProfile}
-                            alt=""
-                            className="h-[60px] w-[60px] object-cover rounded-full"
-                          />
-                        </div>
-                        <div>{property.landlordName}</div>
-                      </div>
+                          <div>
+                            <div
+                              className="flex items-center gap-2 mb-1 text-2xl"
+                              style={{ fontWeight: 600 }}
+                            >
+                              <div className="flex justify-between items-center w-full">
+                                <div className="flex items-center gap-1">
+                                  <BsBuildings />
+                                  <h2>{item.propertyName}</h2>
+                                </div>
+                                <div>
+                                  <h2 className="text-zinc-500 text-lg">
+                                    Currently: {item.unitsNo} Units
+                                  </h2>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <GoLocation />
+                              <p>{item.propertyLocation}</p>
+                            </div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <MdGpsNotFixed />
+                              {!item.gpsCoordinates ? (
+                                <p style={{ fontWeight: 700 }}>
+                                  Coordinates: Unset
+                                </p>
+                              ) : (
+                                <p>Coordinates: {item.gpsCoordinates} </p>
+                              )}
+                            </div>
+                          </div>
 
-                      <div>Landlord KRA: {property.landlordKraPin}</div>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <div>LandLord Email: {property.landlordEmailAddress}</div>
-                      <div>Landlord Phone: {property.landlordPhoneNumber}</div>
-                    </div>
-                    <div className="h-[4px] bg-zinc-500 mt-3 rounded-lg" />
-                    <div className="mt-3">
-                      <div className="flex items-center gap-[20px]">
-                        <div>Created 34 mins Ago</div>
-                        <div>Updated 10 mins Ago</div>
+                          <div className="flex justify-center">
+                            <img
+                              src={item.propertyImg}
+                              alt=""
+                              className="w-[400px] h-[240px] object-cover rounded-md"
+                            />
+                          </div>
+
+                          <div className="mt-8">
+                            <h2
+                              className="mb-4 text-xl"
+                              style={{ fontWeight: 600 }}
+                            >
+                              Landlord Details
+                            </h2>
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-[5px]">
+                                <div>
+                                  {!item.landLordProfile ? (
+                                    <p style={{ fontWeight: 700 }}>Unset</p>
+                                  ) : (
+                                    <>
+                                      <img
+                                        src={item.landLordProfile}
+                                        alt=""
+                                        className="h-[60px] w-[60px] object-cover rounded-full"
+                                      />
+                                    </>
+                                  )}
+                                </div>
+                                <div>{item.landlordName}</div>
+                              </div>
+
+                              <div>Landlord KRA: {item.landlordKraPin}</div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <div>
+                                LandLord Email: {item.landlordEmailAddress}
+                              </div>
+                              <div>
+                                Landlord Phone: {item.landlordPhoneNumber}
+                              </div>
+                            </div>
+                            <div className="h-[4px] bg-zinc-500 mt-3 rounded-lg" />
+                            <div className="mt-3">
+                              <div className="flex items-center gap-[20px]">
+                                <div>
+                                  Created {moment(item.createdAt).fromNow()}
+                                </div>
+                                <div>
+                                  Updated {moment(item.updatedAt).fromNow()}
+                                </div>
+                                <div className="cursor-pointer">
+                                  <BsPen
+                                    title={`Edit ${item.propertyName}`}
+                                    className="bg-[#146C94] text-white p-[5px] text-2xl rounded-md"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-3 ">
+                            <div
+                              className="flex items-center bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer gap-2 justify-center"
+                              onClick={() => handleUnits(item.propertyName)}
+                            >
+                              <p>
+                                <BsPen />
+                              </p>
+                              <p>Manage Units</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                  <div className="mt-3 ">
-                    <div
-                      className="flex items-center bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer gap-2 justify-center"
-                      onClick={() => handleUnits(property.propertyName)}
-                    >
-                      <p>
-                        <BsPen />
-                      </p>
-                      <p>Manage Units</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
