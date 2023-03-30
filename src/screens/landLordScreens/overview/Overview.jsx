@@ -1,18 +1,20 @@
 import React from "react";
 import { MdPeopleOutline } from "react-icons/md";
 import { BsBuildings, BsPen } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
-const manageTenants = () => {
-  localStorage.setItem("newscreen", JSON.stringify("tenants"));
-};
+// const manageTenants = () => {
+//   localStorage.setItem("newscreen", JSON.stringify("tenants"));
+// };
 
 const Overview = () => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <div>
       {/* topBar */}
       <div style={{ borderBottom: "1px solid #ccc", paddingBottom: "10px" }}>
         <div>
-          <p className="text-md">Hi John Nderitu,</p>
+          <p className="text-md">Hi {user.name},</p>
           <p className="text-xl" style={{ fontWeight: 600 }}>
             We are here for you!
           </p>

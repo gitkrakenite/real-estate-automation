@@ -7,10 +7,10 @@ import {
 } from "react-icons/ai";
 
 import { Link, useNavigate } from "react-router-dom";
-// import { useSelector, useDispatch } from "react-redux";
-// import { login, reset } from "../../features/auth/authSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { login, reset } from "../../features/auth/authSlice";
 import { toast } from "react-hot-toast";
-// import Spinner from "../Spinner";
+import Spinner from "../Spinner";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -19,40 +19,41 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  //   const { user, isLoading, isError, isSuccess, message } = useSelector(
-  //     (state) => state.auth
-  //   );
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
-  //   const handleSubmit = (e) => {
-  //     e.preventDefault();
-  //     if (!email || !password) {
-  //       toast.error("All details needed");
-  //       return;
-  //     } else {
-  //       try {
-  //         const userData = { email, password };
-  //         dispatch(login(userData));
-  //         // toast.success("Welcome to connect");
-  //       } catch (error) {
-  //         toast.error("Invalid credentials");
-  //       }
-  //     }
-  //   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast.error("All details needed");
+      return;
+    } else {
+      try {
+        const userData = { email, password };
+        dispatch(login(userData));
+        // toast.success("Welcome to connect");
+      } catch (error) {
+        console.log(message);
+        toast.error("Invalid credentials");
+      }
+    }
+  };
 
-  //   useEffect(() => {
-  //     if (isError) {
-  //       toast.error("Invalid credentials: " + message);
-  //     }
+  useEffect(() => {
+    if (isError) {
+      toast.error("Invalid credentials: " + message);
+    }
 
-  //     if (isSuccess || user) {
-  //       toast.success("Welcome!");
-  //       navigate("/landing");
-  //     }
+    if (isSuccess || user) {
+      toast.success("Welcome!");
+      navigate("/dashboard");
+    }
 
-  //     dispatch(reset());
-  //   }, [user, isError, isSuccess, message, navigate, dispatch]);
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   return (
     <div className="pl-[10px] md:pl-[1em] pr-[10px] md:pr-[1em] mt-[10px] md:mt-[4em] ">
@@ -84,7 +85,7 @@ const Login = () => {
           <h3 className="text-xl  ml-[20px]">PICK UP WHERE YOU LEFT OFF</h3>
           <h4 className="text-lg mb-[20px]  ml-[20px]">SIGN IN NOW</h4>
           <div>
-            <form className="flex flex-col gap-[20px]">
+            <form className="flex flex-col gap-[20px]" onSubmit={handleSubmit}>
               {/* email */}
               <div className="flex p-[10px] ml-[20px] items-center justify-between bg-slate-200 rounded-xl">
                 <div className="flex flex-col gap-[6px]">
@@ -141,24 +142,17 @@ const Login = () => {
                   {/* < /> */}
                 </div>
               </div>
-              {/* {isLoading ? (
+              {isLoading ? (
                 <Spinner message="Please Wait" />
               ) : (
                 <button
                   type="submit"
-                  className="bg-green-700  ml-[20px] p-[10px] text-slate-200 rounded-lg"
+                  className="bg-[#146C94]  ml-[20px] p-[10px] text-slate-200 rounded-lg"
                   onClick={handleSubmit}
                 >
                   Sign In
                 </button>
-              )} */}
-              <button
-                type="submit"
-                className="bg-[#146C94]  ml-[20px] p-[10px] text-slate-200 rounded-lg"
-                //   onClick={handleSubmit}
-              >
-                Sign In
-              </button>
+              )}
             </form>
           </div>
         </div>

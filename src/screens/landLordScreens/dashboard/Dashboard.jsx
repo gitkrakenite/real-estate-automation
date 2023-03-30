@@ -19,6 +19,8 @@ import Help from "../help/Help";
 import Profile from "../profile/Profile";
 import Overview from "../overview/Overview";
 import LandLord from "../landlord/LandLord";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   // tabs navigation states
@@ -46,6 +48,16 @@ const Dashboard = () => {
     const currentscreen = JSON.parse(localStorage.getItem("newscreen"));
     setShowScreen(currentscreen);
   }, [screen]);
+
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/auth");
+    }
+  }, [user]);
 
   return (
     <div className="h-[100vh] overflow-y-scroll">
@@ -157,7 +169,7 @@ const Dashboard = () => {
                 srcset=""
                 className="w-[50px] h-[50px] object-cover rounded-full"
               />
-              <p>John Kimani</p>
+              <p>{user.name}</p>
             </div>
           </div>
         </div>

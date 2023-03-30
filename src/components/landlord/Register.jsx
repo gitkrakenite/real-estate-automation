@@ -8,56 +8,56 @@ import {
 } from "react-icons/ai";
 
 import { Link, useNavigate } from "react-router-dom";
-// import { useSelector, useDispatch } from "react-redux";
-// import { register, reset } from "../../features/auth/authSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { register, reset } from "../../features/auth/authSlice";
 import { toast } from "react-hot-toast";
-// import Spinner from "../Spinner";
+import Spinner from "../Spinner";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [number, setNumber] = useState("");
 
   const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  //   const { user, isLoading, isError, isSuccess, message } = useSelector(
-  //     (state) => state.auth
-  //   );
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
-  //   useEffect(() => {
-  //     if (isError) {
-  //       toast.error("Error occurred" + message);
-  //     }
+  useEffect(() => {
+    if (isError) {
+      toast.error("Error occurred" + message);
+    }
 
-  //     if (isSuccess || user) {
-  //       toast.success("Welcome!");
-  //       navigate("/landing");
-  //     }
+    if (isSuccess || user) {
+      toast.success("Welcome!");
+      navigate("/dashboard");
+    }
 
-  //     dispatch(reset());
-  //   }, [user, isError, isSuccess, message, navigate, dispatch]);
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
 
-  //   const handleSubmit = (e) => {
-  //     e.preventDefault();
-  //     setCategory("farmer");
-  //     if (!name || !category || !email || !password) {
-  //       toast.error("All details needed");
-  //       return;
-  //     } else {
-  //       try {
-  //         const userData = { name, email, category, password };
-  //         dispatch(register(userData));
-  //         // toast.success("Welcome to connect");
-  //       } catch (error) {
-  //         toast.error("An error occurres" + message);
-  //         alert("Registration failed");
-  //       }
-  //     }
-  //   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!name || !email || !phone || !password) {
+      toast.error("All details needed");
+      return;
+    } else {
+      try {
+        const userData = { name, email, phone, password };
+        dispatch(register(userData));
+        // toast.success("Welcome to connect");
+      } catch (error) {
+        toast.error("An error occurres" + message);
+        alert("Registration failed");
+      }
+    }
+  };
 
   return (
     <div className=" pl-[10px] md:pl-[1em] pr-[10px] md:pr-[1em] mt-[10px] md:mt-[4em] ">
@@ -68,7 +68,7 @@ const Register = () => {
           </h3>
           <h4 className="text-lg mb-[20px]">Create new account</h4>
           <div>
-            <form className="flex flex-col gap-[20px]">
+            <form className="flex flex-col gap-[20px]" onSubmit={handleSubmit}>
               {/* name */}
               <div className="flex p-[10px] mr-[20px]  items-center justify-between bg-slate-200 rounded-xl">
                 <div className=" flex-[0.9] flex flex-col gap-[6px] ">
@@ -126,8 +126,8 @@ const Register = () => {
                     placeholder="Enter your phone number"
                     required
                     className="bg-transparent outline-none"
-                    value={number}
-                    onChange={(e) => setNumber(e.target.value)}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
                 <div>
@@ -166,24 +166,18 @@ const Register = () => {
                   {/* < /> */}
                 </div>
               </div>
-              {/* {isLoading ? (
+              {isLoading ? (
                 <Spinner message="Please Wait" />
               ) : (
                 <button
                   type="submit"
-                  className="bg-green-700 mr-[20px] p-[10px] text-slate-200 rounded-lg"
+                  className="bg-[#146C94] mr-[20px] p-[10px] text-slate-200 rounded-lg"
                   onClick={handleSubmit}
                 >
                   Create Account
                 </button>
-              )} */}
-              <button
-                type="submit"
-                className="bg-[#146C94] mr-[20px] p-[10px] text-slate-200 rounded-lg"
-                // onClick={handleSubmit}
-              >
-                Create Account
-              </button>
+              )}
+
               <p>
                 By creating an Account you agree to our{" "}
                 <span className="text-[#146C94] cursor-pointer">
