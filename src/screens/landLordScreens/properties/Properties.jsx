@@ -11,9 +11,11 @@ import { toast } from "react-hot-toast";
 import Spinner from "../../../components/Spinner";
 import moment from "moment";
 import { createProperty } from "../../../features/property/propertySlice";
+import axios from "../../../axios";
 
 const Properties = () => {
   const [showCreateProperty, setShowCreateProperty] = useState(false);
+  const [showUpdateProperty, setShowUpdateProperty] = useState(false);
   const [showCreateUnit, setShowCreateUnit] = useState(false);
   const [showUnits, setShowUnits] = useState(false);
   const [currentunitName, setCurrentUnitName] = useState("");
@@ -44,6 +46,45 @@ const Properties = () => {
   const [updatelandlordPhoneNumber, setupdateLandlordPhoneNumber] =
     useState("");
   const [updatelandlordKraPin, setupdateLandlordKraPin] = useState("");
+  const [loading, setLoading] = useState("");
+  const [propertyUpdateId, setPropertyUpdateId] = useState("");
+
+  useEffect(() => {
+    setPropertyName(updatepropertyName);
+    setPropertyImg(updatepropertyImg);
+    setUnitsNo(updateunitsNo);
+    setPropertyLocation(updatepropertyLocation);
+    setGpsCoordinates(updategpsCoordinates);
+    setLandlordName(updatelandlordName);
+    setLandLordProfile(updatelandLordProfile);
+    setLandlordEmailAddress(updatelandlordEmailAddress);
+    setLandlordPhoneNumber(updatelandlordPhoneNumber);
+    setLandlordKraPin(updatelandlordKraPin);
+  }, [updatepropertyName, updatepropertyImg, updatelandlordPhoneNumber]);
+
+  const handleUpdateProperty = async (e) => {
+    e.preventDefault();
+    try {
+      const propertyData = {
+        propertyName,
+        propertyImg,
+        unitsNo,
+        propertyLocation,
+        gpsCoordinates,
+        landlordName,
+        landLordProfile,
+        landlordEmailAddress,
+        landlordPhoneNumber,
+        landlordKraPin,
+      };
+      await axios.put("/property/" + propertyUpdateId, propertyData);
+      toast.success("Updated Succesfully");
+      setLoading(!loading);
+      setShowUpdateProperty(false);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
   const dispatch = useDispatch();
 
@@ -109,7 +150,7 @@ const Properties = () => {
 
       toast.success("Sent successfully");
     } catch (error) {
-      toast.error("Error occured: " + message);
+      toast.error("Error occured: ");
     }
   };
 
@@ -144,7 +185,7 @@ const Properties = () => {
 
   useEffect(() => {
     dispatch(getProperty());
-  }, [isError, isSuccess]);
+  }, [isError, isSuccess, loading, setLoading]);
 
   useEffect(() => {
     if (isError) {
@@ -409,6 +450,223 @@ const Properties = () => {
             </div>
           )}
 
+          {showUpdateProperty && (
+            <div className="mb-[1em]">
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={handleUpdateProperty}
+              >
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="name"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Name of the Property
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Name of the Property"
+                    id="name"
+                    required
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    min={5}
+                    maxLength={30}
+                    value={propertyName}
+                    onChange={(e) => setPropertyName(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="imgUrl"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Property Image Url
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="image url"
+                    id="imgUrl"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    required
+                    value={propertyImg}
+                    onChange={(e) => setPropertyImg(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="numberOfUnits"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Number of Units
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="How many units ?"
+                    id="numberOfUnits"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    required
+                    value={unitsNo}
+                    onChange={(e) => setUnitsNo(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="location"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Location of Property
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="i.e Juja opposite Shell"
+                    id="location"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    required
+                    value={propertyLocation}
+                    onChange={(e) => setPropertyLocation(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="gps"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    GPS Coordinates (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="1°17'11.0004''S"
+                    id="gps"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    value={gpsCoordinates}
+                    onChange={(e) => setGpsCoordinates(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="landlordName"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Landlord's Full Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="John Doe"
+                    id="landlordName"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    required
+                    value={landlordName}
+                    onChange={(e) => setLandlordName(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="landlordProfile"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Landlord's Photo (optional)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="photo url"
+                    id="landlordProfile"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    value={landLordProfile}
+                    onChange={(e) => setLandLordProfile(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="landlordEmail"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Landlord's Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="johndoe@gmail.com"
+                    id="landlordEmail"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    required
+                    value={landlordEmailAddress}
+                    onChange={(e) => setLandlordEmailAddress(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="landlordPhone"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Landlord's Phone
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="0798 516432"
+                    id="landlordPhone"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    required
+                    value={landlordPhoneNumber}
+                    onChange={(e) => setLandlordPhoneNumber(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="landlordKra"
+                    style={{ fontWeight: 700 }}
+                    className="text-md"
+                  >
+                    Landlord's KRA Pin
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="0798xx51643sa"
+                    id="landlordKra"
+                    style={{ border: "1px solid black" }}
+                    className="p-[8px] rounded-md"
+                    required
+                    value={landlordKraPin}
+                    onChange={(e) => setLandlordKraPin(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <button
+                    className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                    onClick={handleUpdateProperty}
+                  >
+                    Update Property
+                  </button>
+                </div>
+                <div>
+                  <p
+                    className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                    onClick={() => setShowUpdateProperty(!showUpdateProperty)}
+                  >
+                    Hide this section
+                  </p>
+                </div>
+              </form>
+            </div>
+          )}
+
           {/* <div className="bg-green-500">sasasa</div> */}
 
           {property?.length < 1 ? (
@@ -442,10 +700,10 @@ const Properties = () => {
                         <div>
                           <div>
                             <div
-                              className="flex items-center gap-2 mb-1 text-2xl"
+                              className="flex flex-wrap items-center gap-2 mb-1 text-2xl"
                               style={{ fontWeight: 600 }}
                             >
-                              <div className="flex justify-between items-center w-full">
+                              <div className="flex flex-wrap gap-[10px] justify-between items-center w-full">
                                 <div className="flex items-center gap-1">
                                   <BsBuildings />
                                   <h2>{item.propertyName}</h2>
@@ -488,8 +746,8 @@ const Properties = () => {
                             >
                               Landlord Details
                             </h2>
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-[5px]">
+                            <div className="flex flex-wrap items-center justify-between mb-2">
+                              <div className="flex flex-wrap items-center gap-[10px]">
                                 <div>
                                   {!item.landLordProfile ? (
                                     <p style={{ fontWeight: 700 }}>Unset</p>
@@ -508,7 +766,7 @@ const Properties = () => {
 
                               <div>Landlord KRA: {item.landlordKraPin}</div>
                             </div>
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-wrap flex-col gap-2">
                               <div>
                                 LandLord Email: {item.landlordEmailAddress}
                               </div>
@@ -525,7 +783,35 @@ const Properties = () => {
                                 <div>
                                   Updated {moment(item.updatedAt).fromNow()}
                                 </div>
-                                <div className="cursor-pointer">
+                                <div
+                                  className="cursor-pointer"
+                                  onClick={() => {
+                                    setShowUpdateProperty(true);
+                                    setPropertyUpdateId(item._id);
+                                    setupdatePropertyName(item.propertyName);
+                                    setupdatePropertyImg(item.propertyImg);
+                                    setupdateUnitsNo(item.unitsNo);
+                                    setupdatePropertyLocation(
+                                      item.propertyLocation
+                                    );
+                                    setupdateGpsCoordinates(
+                                      item.gpsCoordinates || ""
+                                    );
+                                    setupdateLandlordName(item.landlordName);
+                                    setupdateLandLordProfile(
+                                      item.landLordProfile || ""
+                                    );
+                                    setupdateLandlordEmailAddress(
+                                      item.landlordEmailAddress
+                                    );
+                                    setupdateLandlordPhoneNumber(
+                                      item.landlordPhoneNumber
+                                    );
+                                    setupdateLandlordKraPin(
+                                      item.landlordKraPin
+                                    );
+                                  }}
+                                >
                                   <BsPen
                                     title={`Edit ${item.propertyName}`}
                                     className="bg-[#146C94] text-white p-[5px] text-2xl rounded-md"
@@ -537,7 +823,7 @@ const Properties = () => {
                           <div className="mt-3 ">
                             <div
                               className="flex items-center bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer gap-2 justify-center"
-                              onClick={() => handleUnits(item.propertyName)}
+                              // onClick={handleUnits(item._name)}
                             >
                               <p>
                                 <BsPen />
@@ -565,12 +851,13 @@ const Properties = () => {
                               className="flex items-center gap-2 mb-1 text-2xl"
                               style={{ fontWeight: 600 }}
                             >
-                              <div className="flex justify-between items-center w-full">
+                              <div className="flex flex-wrap gap-[15px] justify-between items-center w-full">
                                 <div className="flex items-center gap-1">
                                   <BsBuildings />
                                   <h2>{item.propertyName}</h2>
                                 </div>
-                                <div>
+                                <div className="flex items-center gap-1">
+                                  <h1></h1>
                                   <h2 className="text-zinc-500 text-lg">
                                     Currently: {item.unitsNo} Units
                                   </h2>
@@ -609,7 +896,7 @@ const Properties = () => {
                               Landlord Details
                             </h2>
                             <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-[5px]">
+                              <div className="flex  flex-wrap items-center gap-[10px]">
                                 <div>
                                   {!item.landLordProfile ? (
                                     <p style={{ fontWeight: 700 }}>Unset</p>
@@ -645,7 +932,35 @@ const Properties = () => {
                                 <div>
                                   Updated {moment(item.updatedAt).fromNow()}
                                 </div>
-                                <div className="cursor-pointer">
+                                <div
+                                  className="cursor-pointer"
+                                  onClick={() => {
+                                    setShowUpdateProperty(true);
+                                    setPropertyUpdateId(item._id);
+                                    setupdatePropertyName(item.propertyName);
+                                    setupdatePropertyImg(item.propertyImg);
+                                    setupdateUnitsNo(item.unitsNo);
+                                    setupdatePropertyLocation(
+                                      item.propertyLocation
+                                    );
+                                    setupdateGpsCoordinates(
+                                      item.gpsCoordinates || ""
+                                    );
+                                    setupdateLandlordName(item.landlordName);
+                                    setupdateLandLordProfile(
+                                      item.landLordProfile || ""
+                                    );
+                                    setupdateLandlordEmailAddress(
+                                      item.landlordEmailAddress
+                                    );
+                                    setupdateLandlordPhoneNumber(
+                                      item.landlordPhoneNumber
+                                    );
+                                    setupdateLandlordKraPin(
+                                      item.landlordKraPin
+                                    );
+                                  }}
+                                >
                                   <BsPen
                                     title={`Edit ${item.propertyName}`}
                                     className="bg-[#146C94] text-white p-[5px] text-2xl rounded-md"
