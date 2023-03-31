@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 
 const Overview = () => {
   const { user } = useSelector((state) => state.auth);
+  const { property } = useSelector((state) => state.properties);
   return (
     <div>
       {/* topBar */}
@@ -48,13 +49,13 @@ const Overview = () => {
               </p>
             </div>
             <div className="text-2xl mt-3">
-              <h2>Monitoring 5 Properties</h2>
+              <h2>Monitoring {property.length} Properties</h2>
             </div>
             <div className="flex gap-2 justify-end items-center mt-3 text-sm ">
-              Currently at 50% capacity
+              You can Add More
             </div>
             <div className="flex gap-2 justify-end items-center mt-3 text-sm">
-              20% have paid rent
+              Access 100% Monitoring
             </div>
           </div>
         </div>

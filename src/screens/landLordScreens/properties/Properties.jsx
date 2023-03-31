@@ -225,19 +225,24 @@ const Properties = () => {
   };
 
   const handlePropertyDelete = async (propertytoDeleteId) => {
-    // setDeleteProperty("hidden");
-    try {
-      const propertyData = {
-        propertyStatus: deleteProperty,
-      };
-      console.log(propertyData);
-      console.log(deleteProperty);
-      await axios.put("/property/" + propertytoDeleteId, propertyData);
-      toast.success("Deleted Succesfully");
-      setLoading(!loading);
-      setShowUpdateProperty(false);
-    } catch (error) {
-      toast.error(error);
+    let shouldDelete = confirm("Are you sure you want to delete ?");
+
+    if (shouldDelete) {
+      try {
+        const propertyData = {
+          propertyStatus: deleteProperty,
+        };
+        console.log(propertyData);
+        console.log(deleteProperty);
+        await axios.put("/property/" + propertytoDeleteId, propertyData);
+        toast.success("Deleted Succesfully");
+        setLoading(!loading);
+        setShowUpdateProperty(false);
+      } catch (error) {
+        toast.error(error);
+      }
+    } else {
+      toast.success("Aborted Delete");
     }
   };
 
@@ -378,18 +383,23 @@ const Properties = () => {
   };
 
   const handleDeleteUnit = async (unitToDeleteId) => {
-    // setDeleteProperty("hidden");
-    try {
-      const unitData = {
-        unitStatus: deleteUnit,
-      };
+    let shouldDelete = confirm("Are you sure you want to delete ?");
 
-      await axios.put("/unit/" + unitToDeleteId, unitData);
-      toast.success("Deleted Succesfully");
-      setLoading(!loading);
-      // setShowUpdateProperty(false);
-    } catch (error) {
-      toast.error(error);
+    if (shouldDelete) {
+      try {
+        const unitData = {
+          unitStatus: deleteUnit,
+        };
+
+        await axios.put("/unit/" + unitToDeleteId, unitData);
+        toast.success("Deleted Succesfully");
+        setLoading(!loading);
+        // setShowUpdateProperty(false);
+      } catch (error) {
+        toast.error(error);
+      }
+    } else {
+      toast.success("Aborted Deletion");
     }
   };
 
@@ -904,11 +914,11 @@ const Properties = () => {
                                   <BsBuildings />
                                   <h2>{item.propertyName}</h2>
                                 </div>
-                                <div>
+                                {/* <div>
                                   <h2 className="text-zinc-500 text-lg">
                                     Currently: {item.unitsNo} Units
                                   </h2>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                             <div className="flex items-center gap-2 mb-1">
@@ -1054,9 +1064,9 @@ const Properties = () => {
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <h1></h1>
-                                  <h2 className="text-zinc-500 text-lg">
+                                  {/* <h2 className="text-zinc-500 text-lg">
                                     Currently: {item.unitsNo} Units
-                                  </h2>
+                                  </h2> */}
                                 </div>
                               </div>
                             </div>
@@ -1694,11 +1704,11 @@ const Properties = () => {
                           <p>Edit {item.unitName}</p>
                         </div>
                         <div
-                          className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1 cursor-pointer"
+                          className="flex items-center gap-2  bg-red-700 text-white rounded-md p-1 cursor-pointer"
                           onClick={() => handleDeleteUnit(item._id)}
                         >
                           <p>
-                            <BsPen className="" />
+                            <BsTrash className="" />
                           </p>
                           <p>Delete {item.unitName}</p>
                         </div>
@@ -1790,11 +1800,11 @@ const Properties = () => {
                           <p>Edit {item.unitName}</p>
                         </div>
                         <div
-                          className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1 cursor-pointer"
+                          className="flex items-center gap-2 bg-red-700 text-white rounded-md p-1 cursor-pointer"
                           onClick={() => handleDeleteUnit(item._id)}
                         >
                           <p>
-                            <BsPen className="" />
+                            <BsTrash className="" />
                           </p>
                           <p>Delete {item.unitName}</p>
                         </div>

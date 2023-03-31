@@ -33,6 +33,8 @@ const Dashboard = () => {
   const [help, setHelp] = useState(false);
   const [profile, setProfile] = useState(false);
 
+  const { property } = useSelector((state) => state.properties);
+
   // changing screen states
   const prevScreen = JSON.parse(localStorage.getItem("newscreen"));
   const [screen, setScreen] = useState(prevScreen || "overview");
@@ -139,7 +141,7 @@ const Dashboard = () => {
               </p>
               <p>Vacate Tenant</p>
             </div>
-            <div
+            {/* <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
               onClick={() => setScreen("landlord")}
@@ -148,7 +150,7 @@ const Dashboard = () => {
                 <BsPeople />
               </p>
               <p>LandLords</p>
-            </div>
+            </div> */}
             <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
