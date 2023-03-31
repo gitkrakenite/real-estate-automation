@@ -169,7 +169,7 @@ const Dashboard = () => {
                 srcset=""
                 className="w-[50px] h-[50px] object-cover rounded-full"
               />
-              <p>{user.name}</p>
+              <p>{user?.name}</p>
             </div>
           </div>
         </div>

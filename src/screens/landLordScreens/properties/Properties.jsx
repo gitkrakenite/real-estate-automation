@@ -13,13 +13,15 @@ import moment from "moment";
 import { createProperty } from "../../../features/property/propertySlice";
 import axios from "../../../axios";
 
+import { createUnit, getUnit } from "../../../features/units/unitSlice";
+
 const Properties = () => {
   const [showCreateProperty, setShowCreateProperty] = useState(false);
   const [showUpdateProperty, setShowUpdateProperty] = useState(false);
   const [showCreateUnit, setShowCreateUnit] = useState(false);
   const [showUnits, setShowUnits] = useState(false);
   const [currentunitName, setCurrentUnitName] = useState("");
-  const [updateUnit, setUpdateUnit] = useState("");
+  const [showUpdateUnit, setShowUpdateUnit] = useState(false);
 
   // create Property states
   const [propertyName, setPropertyName] = useState("");
@@ -95,17 +97,13 @@ const Properties = () => {
 
   const dispatch = useDispatch();
 
-  const handleUnits = (unitName) => {
-    // alert(unitName);
-    setCurrentUnitName(unitName);
-    setShowUnits(true);
-  };
-
   const { user } = useSelector((state) => state.auth);
 
   const { property, isError, isSuccess, isLoading } = useSelector(
     (state) => state.properties
   );
+
+  const { unit } = useSelector((state) => state.units);
 
   const handleClear = () => {
     setPropertyName("");
@@ -161,11 +159,12 @@ const Properties = () => {
     }
   };
 
-  // search
+  // search property
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setsearchTimeout] = useState(null);
   const [searchedResults, setSearchedResults] = useState(null);
 
+  // search property func
   const handleSearchChange = async (e) => {
     e.preventDefault();
     clearTimeout(setsearchTimeout);
@@ -190,6 +189,41 @@ const Properties = () => {
     );
   };
 
+  // search unit
+  const [unitsearchText, setUnitSearchText] = useState("");
+  const [unitsearchTimeout, setUnitsearchTimeout] = useState(null);
+  const [unitSearchedResults, setUnitSearchedResults] = useState(null);
+
+  // search unit Func
+  const handleUnitSearchChange = async (e) => {
+    e.preventDefault();
+    clearTimeout(unitsearchTimeout);
+
+    setUnitSearchText(e.target.value);
+
+    setUnitsearchTimeout(
+      setTimeout(() => {
+        const searchResults = unit?.filter(
+          (item) =>
+            item.unitName
+              .toLowerCase()
+              .includes(unitsearchText.toLowerCase()) ||
+            item.assignedPropertyName
+              .toLowerCase()
+              .includes(unitsearchText.toLowerCase()) ||
+            item.unitInvestorName
+              .toLowerCase()
+              .includes(unitsearchText.toLowerCase()) ||
+            item.unitVacancy
+              .toLowerCase()
+              .includes(unitsearchText.toLowerCase())
+        );
+
+        setUnitSearchedResults(searchResults);
+      }, 500)
+    );
+  };
+
   const handlePropertyDelete = async (propertytoDeleteId) => {
     // setDeleteProperty("hidden");
     try {
@@ -207,6 +241,21 @@ const Properties = () => {
     }
   };
 
+  const handleShowUnits = (propertyName) => {
+    setCurrentUnitName(propertyName); //update text
+    setShowUnits(true);
+
+    if (!propertyName) {
+      toast.error("Property Name required");
+      return;
+    } else {
+      const propertyData = {
+        assignedPropertyName: propertyName,
+      };
+      dispatch(getUnit(propertyData));
+    }
+  };
+
   useEffect(() => {
     dispatch(getProperty());
   }, [isError, isSuccess, loading, setLoading]);
@@ -216,10 +265,117 @@ const Properties = () => {
       toast.error("Error occurred: " + message);
     }
 
-    if (isSuccess) {
+    if (property.length > 1) {
       toast.success("Properties Found!");
     }
   }, [property, isError, isSuccess, dispatch]);
+
+  // create unit states
+  const [unitName, setUnitName] = useState("");
+  const [assignedPropertyName, setAssignedPropertyName] = useState("");
+  const [unitRent, setUnitRent] = useState("");
+  const [unitRentDeposit, setUnitRentDeposit] = useState("");
+  const [unitWaterDeposit, setUnitWaterDeposit] = useState("");
+  const [unitInvestorName, setUnitInvestorName] = useState("");
+  const [unitUnpaidDues, setUnitUnpaidDues] = useState("");
+  const [unitWaterReading, setUnitWaterReading] = useState("");
+  const [unitVacancy, setUnitVacancy] = useState("");
+  const [deleteUnit, setDeleteUnit] = useState("");
+
+  // updateUnitFields
+  const [updateunitName, setupdateunitName] = useState("");
+  const [updateassignedPropertyName, setupdateassignedPropertyName] =
+    useState("");
+  const [updateunitRent, setupdateUnitRent] = useState("");
+  const [updateunitRentDeposit, setupdateunitRentDeposit] = useState("");
+  const [updateunitWaterDeposit, setupdateunitWaterDeposit] = useState("");
+  const [updateunitInvestorName, setupdateunitInvestorName] = useState("");
+  const [updateunitUnpaidDues, setupdateunitUnpaidDues] = useState("");
+  const [updateunitWaterReading, setupdateunitWaterReading] = useState("");
+  const [updateunitVacancy, setupdateunitVacancy] = useState("");
+  const [unitUpdateId, setUnitUpdateId] = useState("");
+
+  useEffect(() => {
+    setUnitName(updateunitName);
+    setAssignedPropertyName(updateassignedPropertyName);
+    setUnitRent(updateunitRent);
+    setUnitRentDeposit(updateunitRentDeposit);
+    setUnitWaterDeposit(updateunitWaterDeposit);
+    setUnitInvestorName(updateunitInvestorName);
+    setUnitUnpaidDues(updateunitUnpaidDues);
+    setUnitWaterReading(updateunitWaterReading);
+    setUnitVacancy(updateunitVacancy);
+    setDeleteUnit("hidden");
+    setAssignedPropertyName(currentunitName);
+  }, [
+    updateunitName,
+    updateunitRent,
+    updateunitRent,
+    deleteUnit,
+    currentunitName,
+  ]);
+
+  const handleUpdateUnit = async (e) => {
+    e.preventDefault();
+    try {
+      const unitData = {
+        unitName,
+        assignedPropertyName,
+        unitRent,
+        unitRentDeposit,
+        unitWaterDeposit,
+        unitInvestorName,
+        unitUnpaidDues,
+        unitWaterReading,
+        unitVacancy,
+      };
+      await axios.put("/unit/" + unitUpdateId, unitData);
+      toast.success("Updated Succesfully");
+      // setLoading(!loading);
+      alert("Reload to see changes");
+      setShowUpdateUnit(false);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const handleCreateUnit = (e) => {
+    e.preventDefault();
+    // alert(assignedPropertyName);
+    if (
+      !assignedPropertyName ||
+      !unitName ||
+      !unitVacancy ||
+      !unitRent ||
+      !unitRentDeposit ||
+      !unitWaterDeposit ||
+      !unitWaterReading
+    ) {
+      toast.error("Some fields missing details");
+      return;
+    }
+
+    try {
+      const unitData = {
+        unitName,
+        assignedPropertyName,
+        unitRent,
+        unitRentDeposit,
+        unitWaterDeposit,
+        unitInvestorName,
+        unitUnpaidDues,
+        unitWaterReading,
+        unitVacancy,
+      };
+
+      dispatch(createUnit(unitData));
+      setShowCreateUnit(false);
+      handleShowUnits();
+      toast.success("Sent successfully");
+    } catch (error) {
+      toast.error("Error occured: ");
+    }
+  };
 
   return (
     <div className="">
@@ -847,7 +1003,7 @@ const Properties = () => {
                           <div className="mt-3 ">
                             <div
                               className="flex items-center bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer gap-2 justify-center"
-                              // onClick={handleUnits(item._name)}
+                              onClick={() => handleShowUnits(item.propertyName)}
                             >
                               <p>
                                 <BsPen />
@@ -1004,7 +1160,7 @@ const Properties = () => {
                           <div className="mt-3 ">
                             <div
                               className="flex items-center bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer gap-2 justify-center"
-                              onClick={() => handleUnits(item.propertyName)}
+                              onClick={() => handleShowUnits(item.propertyName)}
                             >
                               <p>
                                 <BsPen />
@@ -1042,6 +1198,8 @@ const Properties = () => {
                     type="text"
                     placeholder="Search Unit Details"
                     className="bg-transparent p-[5px] outline-none border-none"
+                    value={unitsearchText}
+                    onChange={handleUnitSearchChange}
                   />
                 </form>
               </div>
@@ -1060,7 +1218,10 @@ const Properties = () => {
             {/* create unit */}
             {showCreateUnit && (
               <div>
-                <form className="flex flex-col gap-4">
+                <form
+                  className="flex flex-col gap-4"
+                  onSubmit={handleCreateUnit}
+                >
                   <div className="flex flex-col gap-2">
                     <label
                       htmlFor="name"
@@ -1076,6 +1237,8 @@ const Properties = () => {
                       required
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      value={unitName}
+                      onChange={(e) => setUnitName(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1092,6 +1255,9 @@ const Properties = () => {
                       id="rent"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitRent}
+                      onChange={(e) => setUnitRent(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1108,6 +1274,9 @@ const Properties = () => {
                       id="rentDeposit"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitRentDeposit}
+                      onChange={(e) => setUnitRentDeposit(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1116,14 +1285,17 @@ const Properties = () => {
                       style={{ fontWeight: 700 }}
                       className="text-md"
                     >
-                      Water Deposit if any
+                      Water Deposit
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter deposit"
                       id="location"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitWaterDeposit}
+                      onChange={(e) => setUnitWaterDeposit(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1140,6 +1312,8 @@ const Properties = () => {
                       id="investorname"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      value={unitInvestorName}
+                      onChange={(e) => setUnitInvestorName(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1156,6 +1330,9 @@ const Properties = () => {
                       id="extraFee"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitUnpaidDues}
+                      onChange={(e) => setUnitUnpaidDues(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1172,6 +1349,9 @@ const Properties = () => {
                       id="waterReading"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitWaterReading}
+                      onChange={(e) => setUnitWaterReading(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1186,6 +1366,9 @@ const Properties = () => {
                       id="status"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitVacancy}
+                      onChange={(e) => setUnitVacancy(e.target.value)}
                     >
                       <option value="occupied">Occupied</option>
                       <option value="vacant">Vacant</option>
@@ -1193,7 +1376,10 @@ const Properties = () => {
                   </div>
 
                   <div>
-                    <button className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full">
+                    <button
+                      className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                      onClick={handleCreateUnit}
+                    >
                       Create Unit Now
                     </button>
                   </div>
@@ -1210,9 +1396,12 @@ const Properties = () => {
             )}
 
             {/* update details Form  */}
-            {updateUnit && (
+            {showUpdateUnit && (
               <div>
-                <form className="flex flex-col gap-4">
+                <form
+                  className="flex flex-col gap-4"
+                  onSubmit={handleUpdateUnit}
+                >
                   <div className="flex flex-col gap-2">
                     <label
                       htmlFor="name"
@@ -1228,6 +1417,8 @@ const Properties = () => {
                       required
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      value={unitName}
+                      onChange={(e) => setUnitName(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1244,6 +1435,9 @@ const Properties = () => {
                       id="rent"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitRent}
+                      onChange={(e) => setUnitRent(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1260,6 +1454,9 @@ const Properties = () => {
                       id="rentDeposit"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitRentDeposit}
+                      onChange={(e) => setUnitRentDeposit(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1268,14 +1465,17 @@ const Properties = () => {
                       style={{ fontWeight: 700 }}
                       className="text-md"
                     >
-                      Water Deposit if any
+                      Water Deposit
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter deposit"
                       id="location"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitWaterDeposit}
+                      onChange={(e) => setUnitWaterDeposit(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1292,6 +1492,8 @@ const Properties = () => {
                       id="investorname"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      value={unitInvestorName}
+                      onChange={(e) => setUnitInvestorName(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1308,6 +1510,9 @@ const Properties = () => {
                       id="extraFee"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitUnpaidDues}
+                      onChange={(e) => setUnitUnpaidDues(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1324,6 +1529,9 @@ const Properties = () => {
                       id="waterReading"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitWaterReading}
+                      onChange={(e) => setUnitWaterReading(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1338,6 +1546,9 @@ const Properties = () => {
                       id="status"
                       style={{ border: "1px solid black" }}
                       className="p-[8px] rounded-md"
+                      required
+                      value={unitVacancy}
+                      onChange={(e) => setUnitVacancy(e.target.value)}
                     >
                       <option value="occupied">Occupied</option>
                       <option value="vacant">Vacant</option>
@@ -1345,14 +1556,17 @@ const Properties = () => {
                   </div>
 
                   <div>
-                    <button className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full">
-                      Update Unit Now
+                    <button
+                      className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                      onClick={handleUpdateUnit}
+                    >
+                      Update Unit
                     </button>
                   </div>
                   <div>
                     <p
                       className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer text-center w-full"
-                      onClick={() => setUpdateUnit(false)}
+                      onClick={() => setShowUpdateUnit(false)}
                     >
                       Hide this section
                     </p>
@@ -1364,99 +1578,209 @@ const Properties = () => {
             {/* display mexico units */}
             <div className="unitWrapper">
               {/*  */}
-              <div className="unitShadow mb-2 p-2 mt-3">
-                <div className="flex justify-between gap-[10px] mb-2">
-                  <p>
-                    Unit Name:{" "}
-                    <span style={{ fontWeight: 700 }}>A5 block 2</span>
-                  </p>
-                  <p>
-                    Investor:{" "}
-                    <span style={{ fontWeight: 700 }}>Mike Njogu</span>
+
+              {unit.length < 1 && (
+                <div className=" mt-[4em]">
+                  <p className="text-3xl" style={{ fontWeight: 600 }}>
+                    No Unit Currently in {currentunitName}
                   </p>
                 </div>
-                <div className="mb-2">
-                  <p>
-                    One time Deposit:{" "}
-                    <span style={{ fontWeight: 700 }}>Ksh.5500</span>{" "}
-                  </p>
-                  <p>
-                    Rent per month:{" "}
-                    <span style={{ fontWeight: 700 }}>Ksh.5500</span>
-                  </p>
-                  <p>
-                    Water Deposit:{" "}
-                    <span style={{ fontWeight: 700 }}>Unset</span>
-                  </p>
-                  <p>
-                    Extra Charges:{" "}
-                    <span style={{ fontWeight: 700 }}>Ksh.8000</span>
-                  </p>
-                </div>
-                <div>
-                  <p>
-                    Current Water Reading:{" "}
-                    <span style={{ fontWeight: 700 }}>Ksh.4000</span>
-                  </p>
-                </div>
-                <div className="mt-4 mb-4 flex justify-between items-center">
-                  <div>
-                    Status:{" "}
-                    <span className="bg-green-700 text-white p-[5px] rounded-md text-sm">
-                      Occupied
-                    </span>
-                  </div>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => setUpdateUnit(!updateUnit)}
-                  >
-                    <p>
-                      <BsPen className="text-[#146C94]" />
-                    </p>
-                    <p>Edit A5</p>
-                  </div>
-                  <div className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1">
-                    <p>
-                      <BsPen className="" />
-                    </p>
-                    <p>Delete A5</p>
-                  </div>
-                </div>
-              </div>
-              {/*  */}
-              <div className="unitShadow mb-2 p-2 mt-3">
-                <div className="flex justify-between gap-[10px]">
-                  <p>Unit Name: A5 block 2</p>
-                  <p>Investor: Mike Njogu</p>
-                </div>
-                <div>
-                  <p>One time Deposit: Ksh.5500</p>
-                  <p>Rent per month: Ksh. 5000</p>
-                  <p>Water Deposit: Unset</p>
-                  <p>Extra Charges: Ksh. 8000</p>
-                </div>
-                <div>
-                  <p>Current Water Reading: Ksh.4000</p>
-                </div>
-                <div>Status: Occupied</div>
-              </div>
-              {/*  */}
-              <div className="unitShadow mb-2 p-2 mt-3">
-                <div className="flex justify-between gap-[10px]">
-                  <p>Unit Name: A5 block 2</p>
-                  <p>Investor: Mike Njogu</p>
-                </div>
-                <div>
-                  <p>One time Deposit: Ksh.5500</p>
-                  <p>Rent per month: Ksh. 5000</p>
-                  <p>Water Deposit: Unset</p>
-                  <p>Extra Charges: Ksh. 8000</p>
-                </div>
-                <div>
-                  <p>Current Water Reading: Ksh.4000</p>
-                </div>
-                <div>Status: Occupied</div>
-              </div>
+              )}
+
+              {unitsearchText && (
+                <h2 className="font-medium text-[#666e75] text-xl mb-3">
+                  Showing Resuls for{" "}
+                  <span className="text-[#222328]">{unitsearchText}</span>:
+                </h2>
+              )}
+
+              {unitsearchText ? (
+                <>
+                  {unitSearchedResults?.map((item) => (
+                    <div className="unitShadow mb-2 p-2 mt-3" key={item._id}>
+                      <div className="flex justify-between gap-[10px] mb-2">
+                        <p>
+                          Unit Name:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            {item.unitName}
+                          </span>
+                        </p>
+                        <p>
+                          Investor:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            {item.unitInvestorName}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="mb-2">
+                        <p>
+                          Rent Deposit:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            {item.unitRentDeposit}
+                          </span>{" "}
+                        </p>
+                        <p>
+                          Rent per month:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            {item.unitRent}
+                          </span>
+                        </p>
+                        <p>
+                          Water Deposit:{" "}
+                          {item.unitWaterDeposit ? (
+                            <span style={{ fontWeight: 700 }}>
+                              {item.unitWaterDeposit}
+                            </span>
+                          ) : (
+                            <span style={{ fontWeight: 700 }}>Unset</span>
+                          )}
+                        </p>
+                        <p>
+                          Extra Charges:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            Ksh.{item.unitUnpaidDues}
+                          </span>
+                        </p>
+                      </div>
+                      <div>
+                        <p>
+                          Current Water Reading:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            Ksh.{item.unitWaterReading}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="mt-4 mb-4 flex justify-between items-center">
+                        <div>
+                          Status:{" "}
+                          <span className="bg-green-700 text-white p-[5px] rounded-md text-sm">
+                            {item.unitVacancy}
+                          </span>
+                        </div>
+                        <div
+                          className="flex items-center gap-2 cursor-pointer"
+                          onClick={() => {
+                            setShowUpdateUnit(true);
+                            setUnitUpdateId(item._id);
+                            setupdateunitName(item.unitName);
+                            setupdateUnitRent(item.unitRent);
+                            setupdateunitRentDeposit(item.unitRentDeposit);
+                            setupdateunitWaterDeposit(item.unitWaterDeposit);
+                            setupdateunitInvestorName(item.unitInvestorName);
+                            setupdateunitUnpaidDues(item.unitUnpaidDues);
+                            setupdateunitWaterReading(item.unitWaterReading);
+                            setupdateunitVacancy(item.unitVacancy);
+                          }}
+                        >
+                          <p>
+                            <BsPen className="text-[#146C94]" />
+                          </p>
+                          <p>Edit {item.unitName}</p>
+                        </div>
+                        <div className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1">
+                          <p>
+                            <BsPen className="" />
+                          </p>
+                          <p>Delete {item.unitName}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {unit?.map((item) => (
+                    <div className="unitShadow mb-2 p-2 mt-3" key={item._id}>
+                      <div className="flex justify-between gap-[10px] mb-2">
+                        <p>
+                          Unit Name:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            {item.unitName}
+                          </span>
+                        </p>
+                        <p>
+                          Investor:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            {item.unitInvestorName}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="mb-2">
+                        <p>
+                          Rent Deposit:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            {item.unitRentDeposit}
+                          </span>{" "}
+                        </p>
+                        <p>
+                          Rent per month:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            {item.unitRent}
+                          </span>
+                        </p>
+                        <p>
+                          Water Deposit:{" "}
+                          {item.unitWaterDeposit ? (
+                            <span style={{ fontWeight: 700 }}>
+                              {item.unitWaterDeposit}
+                            </span>
+                          ) : (
+                            <span style={{ fontWeight: 700 }}>Unset</span>
+                          )}
+                        </p>
+                        <p>
+                          Extra Charges:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            Ksh.{item.unitUnpaidDues}
+                          </span>
+                        </p>
+                      </div>
+                      <div>
+                        <p>
+                          Current Water Reading:{" "}
+                          <span style={{ fontWeight: 700 }}>
+                            Ksh.{item.unitWaterReading}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="mt-4 mb-4 flex justify-between items-center">
+                        <div>
+                          Status:{" "}
+                          <span className="bg-green-700 text-white p-[5px] rounded-md text-sm">
+                            {item.unitVacancy}
+                          </span>
+                        </div>
+                        <div
+                          className="flex items-center gap-2 cursor-pointer"
+                          onClick={() => {
+                            setShowUpdateUnit(true);
+                            setUnitUpdateId(item._id);
+                            setupdateunitName(item.unitName);
+                            setupdateUnitRent(item.unitRent);
+                            setupdateunitRentDeposit(item.unitRentDeposit);
+                            setupdateunitWaterDeposit(item.unitWaterDeposit);
+                            setupdateunitInvestorName(item.unitInvestorName);
+                            setupdateunitUnpaidDues(item.unitUnpaidDues);
+                            setupdateunitWaterReading(item.unitWaterReading);
+                            setupdateunitVacancy(item.unitVacancy);
+                          }}
+                        >
+                          <p>
+                            <BsPen className="text-[#146C94]" />
+                          </p>
+                          <p>Edit {item.unitName}</p>
+                        </div>
+                        <div className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1">
+                          <p>
+                            <BsPen className="" />
+                          </p>
+                          <p>Delete {item.unitName}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
         </>
