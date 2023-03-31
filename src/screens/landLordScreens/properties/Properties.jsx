@@ -377,6 +377,22 @@ const Properties = () => {
     }
   };
 
+  const handleDeleteUnit = async (unitToDeleteId) => {
+    // setDeleteProperty("hidden");
+    try {
+      const unitData = {
+        unitStatus: deleteUnit,
+      };
+
+      await axios.put("/unit/" + unitToDeleteId, unitData);
+      toast.success("Deleted Succesfully");
+      setLoading(!loading);
+      // setShowUpdateProperty(false);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   return (
     <div className="">
       <h2 className="text-2xl mb-1" style={{ fontWeight: 700 }}>
@@ -1677,7 +1693,10 @@ const Properties = () => {
                           </p>
                           <p>Edit {item.unitName}</p>
                         </div>
-                        <div className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1">
+                        <div
+                          className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1 cursor-pointer"
+                          onClick={() => handleDeleteUnit(item._id)}
+                        >
                           <p>
                             <BsPen className="" />
                           </p>
@@ -1770,7 +1789,10 @@ const Properties = () => {
                           </p>
                           <p>Edit {item.unitName}</p>
                         </div>
-                        <div className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1">
+                        <div
+                          className="flex items-center gap-2 cursor-pointer bg-red-700 text-white rounded-md p-1 cursor-pointer"
+                          onClick={() => handleDeleteUnit(item._id)}
+                        >
                           <p>
                             <BsPen className="" />
                           </p>
