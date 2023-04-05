@@ -20,7 +20,8 @@ import Profile from "../profile/Profile";
 import Overview from "../overview/Overview";
 import LandLord from "../landlord/LandLord";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getProperty } from "../../../features/property/propertySlice";
 
 const Dashboard = () => {
   // tabs navigation states
@@ -43,6 +44,12 @@ const Dashboard = () => {
   const changeScreen = () => {
     localStorage.setItem("newscreen", JSON.stringify(screen));
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProperty());
+  }, []);
 
   useEffect(() => {
     changeScreen();

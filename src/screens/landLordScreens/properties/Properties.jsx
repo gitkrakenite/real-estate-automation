@@ -266,9 +266,9 @@ const Properties = () => {
   }, [isError, isSuccess, loading, setLoading]);
 
   useEffect(() => {
-    if (isError) {
-      toast.error("Error occurred: " + message);
-    }
+    // if (isError) {
+    //   toast.error("Error occurred: ");
+    // }
 
     if (property.length > 1) {
       toast.success("Properties Found!");
