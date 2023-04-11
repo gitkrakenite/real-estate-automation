@@ -21,10 +21,6 @@ const Tenants = () => {
 
   const [reloadTenants, setReloadTenants] = useState(false);
 
-  const handleUpdateTenant = (tenantName) => {
-    setUpdateTenant(true);
-  };
-
   const dispatch = useDispatch();
 
   const { tenant, isError, isSuccess, isLoading } = useSelector(
@@ -163,11 +159,71 @@ const Tenants = () => {
     }
   };
 
+  // update tenant state
+  const [updateTenantName, setupdateTenantName] = useState("");
+  const [updateTenantemailAddress, setupdateTenantemailAddress] = useState("");
+  const [updateTenantIdNumber, setupdateTenantIdNumber] = useState("");
+  const [updateTenantkraPin, setupdateTenantkraPin] = useState("");
+  const [updateTenantMobile, setupdateTenantMobile] = useState("");
+  const [updateTenantMaritalStatus, setupdateTenantMaritalStatus] =
+    useState("");
+  const [updatePropertyToOccupy, setupdatePropertyToOccupy] = useState("");
+  const [updateunitAssigned, setupdateunitAssigned] = useState("");
+  const [updatedepositStatus, setupdateDepositStatus] = useState("");
+  const [updateTenantUnPaidDues, setupdateTenantUnPaidDues] = useState("");
+  const [updateTenantPhoto, setupdateTenantPhoto] = useState("");
   const [deleteTenant, setDeleteTenant] = useState("");
+  const [tenantUpdateId, setTenantUpdateId] = useState("");
+
+  useEffect(() => {
+    setTenantName(updateTenantName);
+    setTenantemailAddress(updateTenantemailAddress);
+    setTenantIdNumber(updateTenantIdNumber);
+    setTenantkraPin(updateTenantkraPin);
+    setTenantMobile(updateTenantMobile);
+    setTenantMaritalStatus(updateTenantMaritalStatus);
+    setPropertyToOccupy(updatePropertyToOccupy);
+    setunitAssigned(updateunitAssigned);
+    setDepositStatus(updatedepositStatus);
+    setTenantUnPaidDues(updateTenantUnPaidDues);
+    setTenantPhoto(updateTenantPhoto);
+  }, [updateTenantName, updateTenantkraPin, updateTenantUnPaidDues]);
 
   useEffect(() => {
     setDeleteTenant("hidden");
   }, [deleteTenant]);
+
+  // const handleUpdateTenant = (tenantName) => {
+
+  // };
+
+  // setUpdateTenant(true);
+
+  const handleUpdateTenant = async (e) => {
+    e.preventDefault();
+    try {
+      const tenantData = {
+        tenantName,
+        tenantemailAddress,
+        tenantIdNumber,
+        tenantkraPin,
+        tenantMobile,
+        tenantMaritalStatus,
+        propertyToOccupy,
+        unitAssigned,
+        depositStatus,
+        tenantUnPaidDues,
+        tenantPhoto,
+      };
+      await axios.put("/tenant/" + tenantUpdateId, tenantData);
+      setReloadTenants(!reloadTenants);
+      toast.success("Updated Succesfully");
+
+      setUpdateTenant(false);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
   const handleDeleteTenant = async (tenanttoDeleteId) => {
     let shouldDelete = confirm("Are you sure you want to delete ?");
@@ -525,7 +581,7 @@ const Tenants = () => {
         {/* update Tenant */}
         {updateTenant && (
           <div className="mb-[1em]">
-            <form className="flex flex-col gap-4" onSubmit={handleCreateTenant}>
+            <form className="flex flex-col gap-4" onSubmit={handleUpdateTenant}>
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="name"
@@ -796,9 +852,9 @@ const Tenants = () => {
               <div>
                 <button
                   className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full"
-                  onClick={handleCreateTenant}
+                  onClick={handleUpdateTenant}
                 >
-                  Update Tenant
+                  Update {tenantName}
                 </button>
               </div>
               <div>
@@ -916,7 +972,25 @@ const Tenants = () => {
                         <div className="flex justify-between">
                           <button
                             className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
-                            onClick={() => handleUpdateTenant(item.name)}
+                            onClick={() => {
+                              setUpdateTenant(true);
+                              setTenantUpdateId(item._id);
+                              setupdateTenantName(item.tenantName);
+                              setupdateTenantemailAddress(
+                                item.tenantemailAddress
+                              );
+                              setupdateTenantIdNumber(item.tenantIdNumber);
+                              setupdateTenantkraPin(item.tenantkraPin);
+                              setupdateTenantMobile(item.tenantMobile);
+                              setupdateTenantMaritalStatus(
+                                item.tenantMaritalStatus
+                              );
+                              setupdatePropertyToOccupy(item.propertyToOccupy);
+                              setupdateunitAssigned(item.unitAssigned);
+                              setupdateDepositStatus(item.depositStatus);
+                              setupdateTenantUnPaidDues(item.tenantUnPaidDues);
+                              setupdateTenantPhoto(item.tenantPhoto);
+                            }}
                           >
                             Update {item.tenantName.split(" ")[0]}
                           </button>
@@ -1017,7 +1091,25 @@ const Tenants = () => {
                         <div className="flex justify-between">
                           <button
                             className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
-                            onClick={() => handleUpdateTenant(item.name)}
+                            onClick={() => {
+                              setUpdateTenant(true);
+                              setTenantUpdateId(item._id);
+                              setupdateTenantName(item.tenantName);
+                              setupdateTenantemailAddress(
+                                item.tenantemailAddress
+                              );
+                              setupdateTenantIdNumber(item.tenantIdNumber);
+                              setupdateTenantkraPin(item.tenantkraPin);
+                              setupdateTenantMobile(item.tenantMobile);
+                              setupdateTenantMaritalStatus(
+                                item.tenantMaritalStatus
+                              );
+                              setupdatePropertyToOccupy(item.propertyToOccupy);
+                              setupdateunitAssigned(item.unitAssigned);
+                              setupdateDepositStatus(item.depositStatus);
+                              setupdateTenantUnPaidDues(item.tenantUnPaidDues);
+                              setupdateTenantPhoto(item.tenantPhoto);
+                            }}
                           >
                             Update {item.tenantName.split(" ")[0]}
                           </button>
