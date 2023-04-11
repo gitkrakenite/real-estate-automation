@@ -226,7 +226,7 @@ const Tenants = () => {
   };
 
   const handleDeleteTenant = async (tenanttoDeleteId) => {
-    let shouldDelete = confirm("Are you sure you want to delete ?");
+    let shouldDelete = confirm("Tenant will be removed from property ?");
 
     if (shouldDelete) {
       try {
@@ -998,7 +998,7 @@ const Tenants = () => {
                             className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer"
                             onClick={() => handleDeleteTenant(item._id)}
                           >
-                            Delete Tenant
+                            Vacate Tenant
                           </button>
                         </div>
                       </div>
@@ -1117,7 +1117,7 @@ const Tenants = () => {
                             className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer"
                             onClick={() => handleDeleteTenant(item._id)}
                           >
-                            Delete Tenant
+                            Vacate Tenant
                           </button>
                         </div>
                       </div>

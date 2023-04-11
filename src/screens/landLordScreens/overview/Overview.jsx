@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 const Overview = () => {
   const { user } = useSelector((state) => state.auth);
   const { property } = useSelector((state) => state.properties);
+  const { tenant } = useSelector((state) => state.tenant);
   return (
     <div>
       {/* topBar */}
@@ -31,7 +32,7 @@ const Overview = () => {
             </p>
           </div>
           <div className="text-2xl mt-3">
-            <h2>You have 58 tenants</h2>
+            <h2>You have {tenant.length} tenants</h2>
           </div>
           <div className="flex gap-2 justify-end items-center mt-3 text-sm ">
             Currently at 50% capacity

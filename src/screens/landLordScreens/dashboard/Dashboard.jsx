@@ -138,7 +138,7 @@ const Dashboard = () => {
               </p>
               <p>Notes</p>
             </div>
-            <div
+            {/* <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
               onClick={() => setScreen("vacancy")}
@@ -147,7 +147,7 @@ const Dashboard = () => {
                 <BsDoorOpen />
               </p>
               <p>Vacate Tenant</p>
-            </div>
+            </div> */}
             {/* <div
               className="flex items-center gap-2 text-white text-lg p-[10px] cursor-pointer mb-2 hover:bg-[#19A7CE] rounded-lg"
               style={{ borderBottom: "1px solid white" }}
@@ -190,7 +190,7 @@ const Dashboard = () => {
             {showscreen === "tenants" && <Tenants />}
             {showscreen === "maintenance" && <Maintenance />}
             {showscreen === "notes" && <Notes />}
-            {showscreen === "vacancy" && <Vacancy />}
+            {/* {showscreen === "vacancy" && <Vacancy />} */}
             {/* {showscreen === "landlord" && <LandLord />} */}
             {showscreen === "help" && <Help />}
             {showscreen === "profile" && <Profile />}
