@@ -68,6 +68,43 @@ const Tenants = () => {
     }
   };
 
+  // search property
+  const [searchText, setSearchText] = useState("");
+  const [searchTimeout, setsearchTimeout] = useState(null);
+  const [searchedResults, setSearchedResults] = useState(null);
+
+  // search property func
+  const handleSearchChange = async (e) => {
+    e.preventDefault();
+    clearTimeout(setsearchTimeout);
+
+    setSearchText(e.target.value);
+
+    setsearchTimeout(
+      setTimeout(() => {
+        const searchResults = tenant?.filter(
+          (item) =>
+            item.tenantName.toLowerCase().includes(searchText.toLowerCase()) ||
+            item.tenantMaritalStatus
+              .toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            item.propertyToOccupy
+              .toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            item.unitAssigned
+              .toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            item.depositStatus
+              .toLowerCase()
+              .includes(searchText.toLowerCase()) ||
+            item.tenantIdNumber.toLowerCase().includes(searchText.toLowerCase())
+        );
+
+        setSearchedResults(searchResults);
+      }, 500)
+    );
+  };
+
   useEffect(() => {
     handleShowUnits();
   }, [propertyToOccupy]);
@@ -91,6 +128,9 @@ const Tenants = () => {
                 type="text"
                 placeholder="Search Tenant Name or Email"
                 className="bg-transparent outline-none w-full"
+                required
+                value={searchText}
+                onChange={handleSearchChange}
               />
               <p>
                 <AiOutlineSearch className="text-xl" />
@@ -636,6 +676,13 @@ const Tenants = () => {
           </div>
         )}
 
+        {searchText && (
+          <h2 className="font-medium text-[#666e75] text-xl mb-3">
+            Showing Resuls for{" "}
+            <span className="text-[#222328]">{searchText}</span>:
+          </h2>
+        )}
+
         {/* tenant info */}
         <div className="h-[70vh] overflow-y-scroll">
           <div className="flex gap-4 flex-wrap ">
@@ -645,101 +692,203 @@ const Tenants = () => {
               </div>
             ) : (
               <>
-                {tenant?.map((item) => (
-                  <div key={item._id} className="unitShadow p-3 rounded-md">
-                    <div className="flex justify-center mb-3">
-                      <img
-                        src={item.tenantPhoto}
-                        alt=""
-                        className="w-[80px] h-[80px] object-cover rounded-full"
-                      />
-                    </div>
-                    <div className="flex justify-between mb-1 mt-1">
-                      <p>
-                        Name:{" "}
-                        <span style={{ fontWeight: 700 }}>
-                          {" "}
-                          {item.tenantName}
-                        </span>
-                      </p>
-                      <p>
-                        Email:{" "}
-                        <a href={`mailto:${item.tenantemailAddress}`}>
-                          <span style={{ fontWeight: 700 }}>
-                            {item.tenantemailAddress}
-                          </span>
-                        </a>
-                      </p>
-                    </div>
-                    <div className="flex justify-between mb-1 mt-1">
-                      <p>
-                        Phone:{" "}
-                        <span style={{ fontWeight: 700 }}>
-                          {item.tenantMobile}
-                        </span>{" "}
-                      </p>
-                      <p>
-                        KRA:{" "}
-                        <span style={{ fontWeight: 700 }}>
-                          {item.tenantkraPin}
-                        </span>{" "}
-                      </p>
-                    </div>
-                    <div className="flex justify-between mb-1 mt-1">
-                      <p>
-                        Marital Status:{" "}
-                        <span style={{ fontWeight: 700 }}>
-                          {item.tenantMaritalStatus}
-                        </span>{" "}
-                      </p>
-                    </div>
-                    <div className="flex justify-between gap-4 mb-1 mt-1">
-                      <p>
-                        Property Assigned:{" "}
-                        <span style={{ fontWeight: 700 }}>
-                          {item.propertyToOccupy}
-                        </span>
-                      </p>
-                      <p>
-                        Unit Assigned:{" "}
-                        <span style={{ fontWeight: 700 }}>
-                          {item.unitAssigned}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="flex justify-between mb-1 mt-1 gap-3 flex-wrap">
-                      <p>
-                        Paid Rent Deposit:{" "}
-                        <span style={{ fontWeight: 700 }}>
-                          {item.depositStatus}
-                        </span>{" "}
-                      </p>
-                      <p>
-                        Total Unpaid Dues:{" "}
-                        <span style={{ fontWeight: 700 }}>
-                          Ksh.{item.tenantUnPaidDues}
-                        </span>{" "}
-                      </p>
-                    </div>
+                {searchText ? (
+                  <>
+                    {searchedResults?.map((item) => (
+                      <div key={item._id} className="unitShadow p-3 rounded-md">
+                        <div className="flex justify-center mb-3">
+                          <img
+                            src={item.tenantPhoto}
+                            alt=""
+                            className="w-[80px] h-[80px] object-cover rounded-full"
+                          />
+                        </div>
+                        <div className="flex justify-between mb-1 mt-1">
+                          <p>
+                            Name:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {" "}
+                              {item.tenantName}
+                            </span>
+                          </p>
+                          <p>
+                            Email:{" "}
+                            <a href={`mailto:${item.tenantemailAddress}`}>
+                              <span style={{ fontWeight: 700 }}>
+                                {item.tenantemailAddress}
+                              </span>
+                            </a>
+                          </p>
+                        </div>
+                        <div className="flex justify-between mb-1 mt-1">
+                          <p>
+                            Phone:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.tenantMobile}
+                            </span>{" "}
+                          </p>
+                          <p>
+                            KRA:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.tenantkraPin}
+                            </span>{" "}
+                          </p>
+                        </div>
+                        <div className="flex justify-between mb-1 mt-1">
+                          <p>
+                            Marital Status:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.tenantMaritalStatus}
+                            </span>{" "}
+                          </p>
+                        </div>
+                        <div className="flex justify-between gap-4 mb-1 mt-1">
+                          <p>
+                            Property Assigned:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.propertyToOccupy}
+                            </span>
+                          </p>
+                          <p>
+                            Unit Assigned:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.unitAssigned}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="flex justify-between mb-1 mt-1 gap-3 flex-wrap">
+                          <p>
+                            Paid Rent Deposit:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.depositStatus}
+                            </span>{" "}
+                          </p>
+                          <p>
+                            Total Unpaid Dues:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              Ksh.{item.tenantUnPaidDues}
+                            </span>{" "}
+                          </p>
+                        </div>
 
-                    <div className="flex justify-between items-center">
-                      <div>Created {moment(item.createdAt).fromNow()}</div>
-                      <div>Updated {moment(item.updatedAt).fromNow()}</div>
-                    </div>
-                    <div className="h-[4px] bg-zinc-500 mt-3 mb-3 rounded-md" />
-                    <div className="flex justify-between">
-                      <button
-                        className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
-                        onClick={() => handleUpdateTenant(item.name)}
-                      >
-                        Update {item.tenantName.split(" ")[0]}
-                      </button>
-                      <button className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer">
-                        Delete Tenant
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                        <div className="flex justify-between items-center">
+                          <div>Created {moment(item.createdAt).fromNow()}</div>
+                          <div>Updated {moment(item.updatedAt).fromNow()}</div>
+                        </div>
+                        <div className="h-[4px] bg-zinc-500 mt-3 mb-3 rounded-md" />
+                        <div className="flex justify-between">
+                          <button
+                            className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
+                            onClick={() => handleUpdateTenant(item.name)}
+                          >
+                            Update {item.tenantName.split(" ")[0]}
+                          </button>
+                          <button className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer">
+                            Delete Tenant
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {tenant?.map((item) => (
+                      <div key={item._id} className="unitShadow p-3 rounded-md">
+                        <div className="flex justify-center mb-3">
+                          <img
+                            src={item.tenantPhoto}
+                            alt=""
+                            className="w-[80px] h-[80px] object-cover rounded-full"
+                          />
+                        </div>
+                        <div className="flex justify-between mb-1 mt-1">
+                          <p>
+                            Name:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {" "}
+                              {item.tenantName}
+                            </span>
+                          </p>
+                          <p>
+                            Email:{" "}
+                            <a href={`mailto:${item.tenantemailAddress}`}>
+                              <span style={{ fontWeight: 700 }}>
+                                {item.tenantemailAddress}
+                              </span>
+                            </a>
+                          </p>
+                        </div>
+                        <div className="flex justify-between mb-1 mt-1">
+                          <p>
+                            Phone:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.tenantMobile}
+                            </span>{" "}
+                          </p>
+                          <p>
+                            KRA:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.tenantkraPin}
+                            </span>{" "}
+                          </p>
+                        </div>
+                        <div className="flex justify-between mb-1 mt-1">
+                          <p>
+                            Marital Status:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.tenantMaritalStatus}
+                            </span>{" "}
+                          </p>
+                        </div>
+                        <div className="flex justify-between gap-4 mb-1 mt-1">
+                          <p>
+                            Property Assigned:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.propertyToOccupy}
+                            </span>
+                          </p>
+                          <p>
+                            Unit Assigned:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.unitAssigned}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="flex justify-between mb-1 mt-1 gap-3 flex-wrap">
+                          <p>
+                            Paid Rent Deposit:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              {item.depositStatus}
+                            </span>{" "}
+                          </p>
+                          <p>
+                            Total Unpaid Dues:{" "}
+                            <span style={{ fontWeight: 700 }}>
+                              Ksh.{item.tenantUnPaidDues}
+                            </span>{" "}
+                          </p>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                          <div>Created {moment(item.createdAt).fromNow()}</div>
+                          <div>Updated {moment(item.updatedAt).fromNow()}</div>
+                        </div>
+                        <div className="h-[4px] bg-zinc-500 mt-3 mb-3 rounded-md" />
+                        <div className="flex justify-between">
+                          <button
+                            className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
+                            onClick={() => handleUpdateTenant(item.name)}
+                          >
+                            Update {item.tenantName.split(" ")[0]}
+                          </button>
+                          <button className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer">
+                            Delete Tenant
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
               </>
             )}
           </div>
