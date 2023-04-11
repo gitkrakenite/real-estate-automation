@@ -10,6 +10,7 @@ import Spinner from "../../../components/Spinner";
 import { toast } from "react-hot-toast";
 import { getUnit } from "../../../features/units/unitSlice";
 import { createTenant } from "../../../features/tenant/tenantSlice";
+import axios from "../../../axios";
 
 const Tenants = () => {
   const [showCreateTenant, setShowCreateTenant] = useState(false);
@@ -17,6 +18,8 @@ const Tenants = () => {
   const [currentunitName, setCurrentUnitName] = useState("");
   const [showUnit, setShowUnits] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [reloadTenants, setReloadTenants] = useState(false);
 
   const handleUpdateTenant = (tenantName) => {
     setUpdateTenant(true);
@@ -37,7 +40,7 @@ const Tenants = () => {
       return;
     }
     dispatch(getTenant());
-  }, [isError, isSuccess, property]);
+  }, [isError, isSuccess, property, reloadTenants]);
 
   // create tenant state
   const [tenantName, setTenantName] = useState("");
@@ -157,6 +160,33 @@ const Tenants = () => {
       } catch (error) {
         toast.error(error);
       }
+    }
+  };
+
+  const [deleteTenant, setDeleteTenant] = useState("");
+
+  useEffect(() => {
+    setDeleteTenant("hidden");
+  }, [deleteTenant]);
+
+  const handleDeleteTenant = async (tenanttoDeleteId) => {
+    let shouldDelete = confirm("Are you sure you want to delete ?");
+
+    if (shouldDelete) {
+      try {
+        const tenantData = {
+          tenantStatus: deleteTenant,
+        };
+        console.log(tenantData);
+        console.log(tenanttoDeleteId);
+        await axios.put("/tenant/" + tenanttoDeleteId, tenantData);
+        toast.success("Deleted Succesfully");
+        setReloadTenants(!reloadTenants);
+      } catch (error) {
+        toast.error(error);
+      }
+    } else {
+      toast.success("Cancelled Deletion");
     }
   };
 
@@ -890,7 +920,10 @@ const Tenants = () => {
                           >
                             Update {item.tenantName.split(" ")[0]}
                           </button>
-                          <button className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer">
+                          <button
+                            className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer"
+                            onClick={() => handleDeleteTenant(item._id)}
+                          >
                             Delete Tenant
                           </button>
                         </div>
@@ -988,7 +1021,10 @@ const Tenants = () => {
                           >
                             Update {item.tenantName.split(" ")[0]}
                           </button>
-                          <button className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer">
+                          <button
+                            className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer"
+                            onClick={() => handleDeleteTenant(item._id)}
+                          >
                             Delete Tenant
                           </button>
                         </div>
