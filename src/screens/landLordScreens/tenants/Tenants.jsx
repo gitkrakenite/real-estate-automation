@@ -9,6 +9,7 @@ import moment from "moment";
 import Spinner from "../../../components/Spinner";
 import { toast } from "react-hot-toast";
 import { getUnit } from "../../../features/units/unitSlice";
+import { createTenant } from "../../../features/tenant/tenantSlice";
 
 const Tenants = () => {
   const [showCreateTenant, setShowCreateTenant] = useState(false);
@@ -68,12 +69,12 @@ const Tenants = () => {
     }
   };
 
-  // search property
+  // search tenant
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setsearchTimeout] = useState(null);
   const [searchedResults, setSearchedResults] = useState(null);
 
-  // search property func
+  // search tenant func
   const handleSearchChange = async (e) => {
     e.preventDefault();
     clearTimeout(setsearchTimeout);
@@ -105,13 +106,63 @@ const Tenants = () => {
     );
   };
 
-  useEffect(() => {
-    handleShowUnits();
-  }, [propertyToOccupy]);
+  const handleClear = () => {
+    setTenantName("");
+    setTenantemailAddress("");
+    setTenantIdNumber("");
+    setTenantkraPin("");
+    setTenantMobile("");
+    setTenantMaritalStatus("");
+    setPropertyToOccupy("");
+    setunitAssigned("");
+    setDepositStatus("");
+    setTenantUnPaidDues("");
+    setTenantPhoto("");
+  };
 
   const handleCreateTenant = (e) => {
     e.preventDefault();
+    if (
+      !tenantName ||
+      !tenantemailAddress ||
+      !propertyToOccupy ||
+      !unitAssigned ||
+      !tenantMobile
+    ) {
+      toast.error("details missing");
+      return;
+    } else {
+      try {
+        setLoading;
+        const tenantData = {
+          tenantName,
+          tenantemailAddress,
+          tenantIdNumber,
+          tenantkraPin,
+          tenantMobile,
+          tenantMaritalStatus,
+          propertyToOccupy,
+          unitAssigned,
+          depositStatus,
+          tenantUnPaidDues,
+          tenantPhoto,
+        };
+
+        // console.log(tenantData);
+
+        dispatch(createTenant(tenantData));
+        handleClear();
+        setShowCreateTenant(false);
+        toast.success("Created successfully");
+      } catch (error) {
+        toast.error(error);
+      }
+    }
   };
+
+  useEffect(() => {
+    handleShowUnits();
+  }, [propertyToOccupy, dispatch]);
 
   return (
     <div>
@@ -247,7 +298,7 @@ const Tenants = () => {
                   onChange={(e) => setTenantPhoto(e.target.value)}
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              {/* <div className="flex flex-col gap-2">
                 <label
                   htmlFor="number"
                   style={{ fontWeight: 700 }}
@@ -265,7 +316,301 @@ const Tenants = () => {
                   value={tenantMobile}
                   onChange={(e) => setTenantMobile(e.target.value)}
                 />
+              </div> */}
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="kra"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  KRA pin
+                </label>
+                <input
+                  type="text"
+                  placeholder="4556777"
+                  id="kra"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantkraPin}
+                  onChange={(e) => setTenantkraPin(e.target.value)}
+                />
               </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="marital"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Marital Status
+                </label>
+                <select
+                  name=""
+                  id="marital"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantMaritalStatus}
+                  onChange={(e) => setTenantMaritalStatus(e.target.value)}
+                >
+                  <option value="">Choose</option>
+                  <option value="single">Single</option>
+                  <option value="married">Married</option>
+                  <option value="separated">Separated</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="property"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Property To Occupy
+                </label>
+                <select
+                  name=""
+                  id="property"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={propertyToOccupy}
+                  onChange={(e) => setPropertyToOccupy(e.target.value)}
+                >
+                  <option value="">Choose</option>
+                  {property?.map((item) => (
+                    <>
+                      <option key={item._id} value={item.propertyName}>
+                        {item.propertyName}
+                      </option>
+                    </>
+                  ))}
+                </select>
+              </div>
+
+              {loading ? (
+                <Spinner message={`Fetching ${propertyToOccupy}'s units`} />
+              ) : (
+                <>
+                  {showUnit && (
+                    <div className="flex flex-col gap-2">
+                      <label
+                        htmlFor="unit"
+                        style={{ fontWeight: 700 }}
+                        className="text-md"
+                      >
+                        Unit in {propertyToOccupy} Assigned to Tenant
+                      </label>
+                      <select
+                        name=""
+                        id="unit"
+                        style={{ border: "1px solid black" }}
+                        className="p-[8px] rounded-md"
+                        required
+                        value={unitAssigned}
+                        onChange={(e) => setunitAssigned(e.target.value)}
+                      >
+                        <option value="">Choose</option>
+                        {unit?.map((item) => (
+                          <>
+                            <option key={item._id} value={item.unitName}>
+                              {item.unitName}
+                            </option>
+                          </>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </>
+              )}
+
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="allDeposit"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Paid All Deposits
+                </label>
+                <select
+                  name=""
+                  id="allDeposit"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={depositStatus}
+                  onChange={(e) => setDepositStatus(e.target.value)}
+                >
+                  <option value="">Choose</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Partial">Partial</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="unpaidDues"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Total Unpaid Dues in Ksh.
+                </label>
+                <input
+                  type="number"
+                  placeholder="i.e 0"
+                  id="unpaidDues"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantUnPaidDues}
+                  onChange={(e) => setTenantUnPaidDues(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <button
+                  className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                  onClick={handleCreateTenant}
+                >
+                  Create Tenant Now
+                </button>
+              </div>
+              <div>
+                <p
+                  className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer text-center w-full"
+                  onClick={() => setShowCreateTenant(false)}
+                >
+                  Hide this section
+                </p>
+              </div>
+            </form>
+          </div>
+        )}
+        <h2 className="mb-[1em] text-2xl">
+          You have A total Of {tenant.length} Tenants
+        </h2>
+
+        {/* update Tenant */}
+        {updateTenant && (
+          <div className="mb-[1em]">
+            <form className="flex flex-col gap-4" onSubmit={handleCreateTenant}>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="name"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Full Name of the Tenant
+                </label>
+                <input
+                  type="text"
+                  placeholder="i.e John Doe"
+                  id="name"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantName}
+                  onChange={(e) => setTenantName(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="email"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="i.e johndoe@gmail.com"
+                  id="numberOfUnits"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantemailAddress}
+                  onChange={(e) => setTenantemailAddress(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="mobile"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Tenant's phone number
+                </label>
+                <input
+                  type="text"
+                  placeholder="i.e 0756 xxxxxx"
+                  id="mobile"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantMobile}
+                  onChange={(e) => setTenantMobile(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="idNumber"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Tenant's ID / Passport number
+                </label>
+                <input
+                  type="text"
+                  placeholder="i.e 756xxxxxx"
+                  id="idNumber"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantIdNumber}
+                  onChange={(e) => setTenantIdNumber(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="imgUrl"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Tenant's profile if any
+                </label>
+                <input
+                  type="text"
+                  placeholder="image url"
+                  id="imgUrl"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantPhoto}
+                  onChange={(e) => setTenantPhoto(e.target.value)}
+                />
+              </div>
+              {/* <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="number"
+                  style={{ fontWeight: 700 }}
+                  className="text-md"
+                >
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  placeholder="Tenants phone or mobile"
+                  id="number"
+                  style={{ border: "1px solid black" }}
+                  className="p-[8px] rounded-md"
+                  required
+                  value={tenantMobile}
+                  onChange={(e) => setTenantMobile(e.target.value)}
+                />
+              </div> */}
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="kra"
@@ -423,244 +768,6 @@ const Tenants = () => {
                   className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full"
                   onClick={handleCreateTenant}
                 >
-                  Create Tenant Now
-                </button>
-              </div>
-              <div>
-                <p
-                  className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer text-center w-full"
-                  onClick={() => setShowCreateTenant(false)}
-                >
-                  Hide this section
-                </p>
-              </div>
-            </form>
-          </div>
-        )}
-        <h2 className="mb-[1em] text-2xl">
-          You have A total Of {tenant.length} Tenants
-        </h2>
-
-        {/* update Tenant */}
-        {updateTenant && (
-          <div className="mb-[1em]">
-            <form className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="name"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Full Name of the Tenant
-                </label>
-                <input
-                  type="text"
-                  placeholder="i.e John Doe"
-                  id="name"
-                  required
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="imgUrl"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Tenant's profile if any
-                </label>
-                <input
-                  type="text"
-                  placeholder="image url"
-                  id="imgUrl"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                />
-              </div>
-              {/* <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="idUrl"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  ID Photo upload
-                </label>
-                <input
-                  type="text"
-                  placeholder="image url"
-                  id="imgUrl"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                />
-              </div> */}
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="email"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  placeholder="i.e johndoe@gmail.com"
-                  id="numberOfUnits"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="number"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Phone Number
-                </label>
-                <input
-                  type="text"
-                  placeholder="Tenants phone or mobile"
-                  id="number"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="kra"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  KRA pin
-                </label>
-                <input
-                  type="text"
-                  placeholder="full kra pin"
-                  id="kra"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="marital"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Marital Status
-                </label>
-                <select
-                  name=""
-                  id="marital"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                >
-                  <option value="">Choose</option>
-                  <option value="single">Single</option>
-                  <option value="married">Married</option>
-                  <option value="separated">Separated</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="pets"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Any Pets
-                </label>
-                <select
-                  name=""
-                  id="marital"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                >
-                  <option value="">Choose</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">no</option>
-                </select>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="property"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Property To Occupy
-                </label>
-                <select
-                  name=""
-                  id="property"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                >
-                  <option value="">Choose</option>
-                  <option value="heri">Heri Homes</option>
-                  <option value="mexico">Mexico Hostels</option>
-                </select>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="unit"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Unit in Heri Assigned to Tenant
-                </label>
-                <select
-                  name=""
-                  id="unit"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                >
-                  <option value="">Choose</option>
-                  <option value="a5 block 3">A5 block 3</option>
-                  <option value="c5 block 2">C2 block 6</option>
-                  <option value="C5 block 2">C5 block 2</option>
-                </select>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="unit"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Paid All Deposits
-                </label>
-                <select
-                  name=""
-                  id="unit"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                >
-                  <option value="">Choose</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                  <option value="Partial">Partial</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="unpaidDues"
-                  style={{ fontWeight: 700 }}
-                  className="text-md"
-                >
-                  Total Unpaid Dues
-                </label>
-                <input
-                  type="number"
-                  placeholder="Total unpaid in Ksh."
-                  id="unpaidDues"
-                  style={{ border: "1px solid black" }}
-                  className="p-[8px] rounded-md"
-                />
-              </div>
-
-              <div>
-                <button className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer text-center w-full">
                   Update Tenant
                 </button>
               </div>
@@ -700,7 +807,7 @@ const Tenants = () => {
                           <img
                             src={item.tenantPhoto}
                             alt=""
-                            className="w-[80px] h-[80px] object-cover rounded-full"
+                            className="w-[120px] h-[210px] object-cover rounded-full"
                           />
                         </div>
                         <div className="flex justify-between mb-1 mt-1">
@@ -798,7 +905,7 @@ const Tenants = () => {
                           <img
                             src={item.tenantPhoto}
                             alt=""
-                            className="w-[80px] h-[80px] object-cover rounded-full"
+                            className="w-[130px] h-[210px] object-cover rounded-full"
                           />
                         </div>
                         <div className="flex justify-between mb-1 mt-1">
