@@ -1,0 +1,44 @@
+.react-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.react-table th,
+.react-table td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.react-table th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+}
+
+.react-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.react-table tr:nth-child(even) {
+  background-color: #f7f7f7;
+}
+
+.normal-nav {
+  border: 1px solid #ddd;
+  color: rgb(39, 86, 214);
+  padding: 5px 10px;
+}
+
+.active-nav {
+  background-color: rgb(39, 86, 214);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+}

@@ -22,6 +22,7 @@ import LandLord from "../landlord/LandLord";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProperty } from "../../../features/property/propertySlice";
+import ExamplePagination from "../ExamplePagination";
 
 const Dashboard = () => {
   // tabs navigation states
@@ -188,6 +189,7 @@ const Dashboard = () => {
             {showscreen === "overview" && <Overview />}
             {showscreen === "properties" && <Properties />}
             {showscreen === "tenants" && <Tenants />}
+            {/* change to tenants later */}
             {showscreen === "maintenance" && <Maintenance />}
             {showscreen === "notes" && <Notes />}
             {/* {showscreen === "vacancy" && <Vacancy />} */}

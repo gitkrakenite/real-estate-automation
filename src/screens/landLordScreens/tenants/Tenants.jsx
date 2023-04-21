@@ -250,6 +250,32 @@ const Tenants = () => {
     handleShowUnits();
   }, [propertyToOccupy, dispatch]);
 
+  //   pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 2;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = tenant.slice(firstIndex, lastIndex);
+  const searchedrecords = searchedResults?.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(tenant.length / recordsPerPage);
+  const numbers = [...Array(npage + 1).keys()].slice(1);
+
+  const prevPage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage !== npage) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const changeCurrentPage = (id) => {
+    setCurrentPage(id);
+  };
+
   return (
     <div>
       <h2 className="text-2xl mb-1" style={{ fontWeight: 700 }}>
@@ -877,7 +903,7 @@ const Tenants = () => {
         )}
 
         {/* tenant info */}
-        <div className="h-[70vh] overflow-y-scroll">
+        <div className="">
           <div className="flex gap-4 flex-wrap ">
             {isLoading ? (
               <div className="flex justify-center items-center h-[50vh] w-full ">
@@ -887,246 +913,148 @@ const Tenants = () => {
               <>
                 {searchText ? (
                   <>
-                    {searchedResults?.map((item) => (
-                      <div key={item._id} className="unitShadow p-3 rounded-md">
-                        <div className="flex justify-center mb-3">
-                          <img
-                            src={item.tenantPhoto}
-                            alt=""
-                            className="w-[120px] h-[210px] object-cover rounded-full"
-                          />
-                        </div>
-                        <div className="flex justify-between mb-1 mt-1">
-                          <p>
-                            Name:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {" "}
-                              {item.tenantName}
-                            </span>
-                          </p>
-                          <p>
-                            Email:{" "}
-                            <a href={`mailto:${item.tenantemailAddress}`}>
-                              <span style={{ fontWeight: 700 }}>
-                                {item.tenantemailAddress}
-                              </span>
-                            </a>
-                          </p>
-                        </div>
-                        <div className="flex justify-between mb-1 mt-1">
-                          <p>
-                            Phone:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.tenantMobile}
-                            </span>{" "}
-                          </p>
-                          <p>
-                            KRA:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.tenantkraPin}
-                            </span>{" "}
-                          </p>
-                        </div>
-                        <div className="flex justify-between mb-1 mt-1">
-                          <p>
-                            Marital Status:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.tenantMaritalStatus}
-                            </span>{" "}
-                          </p>
-                        </div>
-                        <div className="flex justify-between gap-4 mb-1 mt-1">
-                          <p>
-                            Property Assigned:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.propertyToOccupy}
-                            </span>
-                          </p>
-                          <p>
-                            Unit Assigned:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.unitAssigned}
-                            </span>
-                          </p>
-                        </div>
-                        <div className="flex justify-between mb-1 mt-1 gap-3 flex-wrap">
-                          <p>
-                            Paid Rent Deposit:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.depositStatus}
-                            </span>{" "}
-                          </p>
-                          <p>
-                            Total Unpaid Dues:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              Ksh.{item.tenantUnPaidDues}
-                            </span>{" "}
-                          </p>
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <div>Created {moment(item.createdAt).fromNow()}</div>
-                          <div>Updated {moment(item.updatedAt).fromNow()}</div>
-                        </div>
-                        <div className="h-[4px] bg-zinc-500 mt-3 mb-3 rounded-md" />
-                        <div className="flex justify-between">
-                          <button
-                            className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
-                            onClick={() => {
-                              setUpdateTenant(true);
-                              setTenantUpdateId(item._id);
-                              setupdateTenantName(item.tenantName);
-                              setupdateTenantemailAddress(
-                                item.tenantemailAddress
-                              );
-                              setupdateTenantIdNumber(item.tenantIdNumber);
-                              setupdateTenantkraPin(item.tenantkraPin);
-                              setupdateTenantMobile(item.tenantMobile);
-                              setupdateTenantMaritalStatus(
-                                item.tenantMaritalStatus
-                              );
-                              setupdatePropertyToOccupy(item.propertyToOccupy);
-                              setupdateunitAssigned(item.unitAssigned);
-                              setupdateDepositStatus(item.depositStatus);
-                              setupdateTenantUnPaidDues(item.tenantUnPaidDues);
-                              setupdateTenantPhoto(item.tenantPhoto);
-                            }}
-                          >
-                            Update {item.tenantName.split(" ")[0]}
-                          </button>
-                          <button
-                            className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer"
-                            onClick={() => handleDeleteTenant(item._id)}
-                          >
-                            Vacate Tenant
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                    <table className="react-table">
+                      <thead>
+                        <th>TENANT NAME</th>
+                        <th>TENANT PHONE</th>
+                        <th>PROPERTY NAME</th>
+                        <th>UNIT NAME</th>
+                        <th>OCCUPATION DATE</th>
+                        <th>UNPAID DUES</th>
+                        <th>EDIT</th>
+                      </thead>
+                      <tbody>
+                        {searchedrecords?.map((item) => (
+                          <tr key={item._id}>
+                            <td>{item.tenantName}</td>
+                            <td>{item.tenantMobile}</td>
+                            <td>{item.propertyToOccupy}</td>
+                            <td>{item.unitAssigned}</td>
+                            <td>{moment(item.createdAt).fromNow()}</td>
+                            <td>{item.tenantUnPaidDues}</td>
+                            <td>
+                              <p
+                                className="text-[#146C94] cursor-pointer"
+                                // onClick={() => {
+                                //   setUpdateTenant(true);
+                                //   setTenantUpdateId(item._id);
+                                //   setupdateTenantName(item.tenantName);
+                                //   setupdateTenantemailAddress(
+                                //     item.tenantemailAddress
+                                //   );
+                                //   setupdateTenantIdNumber(item.tenantIdNumber);
+                                //   setupdateTenantkraPin(item.tenantkraPin);
+                                //   setupdateTenantMobile(item.tenantMobile);
+                                //   setupdateTenantMaritalStatus(
+                                //     item.tenantMaritalStatus
+                                //   );
+                                //   setupdatePropertyToOccupy(item.propertyToOccupy);
+                                //   setupdateunitAssigned(item.unitAssigned);
+                                //   setupdateDepositStatus(item.depositStatus);
+                                //   setupdateTenantUnPaidDues(item.tenantUnPaidDues);
+                                //   setupdateTenantPhoto(item.tenantPhoto);
+                                // }}
+                              >
+                                Edit {item.tenantName.split(" ")[0]}
+                              </p>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </>
                 ) : (
                   <>
-                    {tenant?.map((item) => (
-                      <div key={item._id} className="unitShadow p-3 rounded-md">
-                        <div className="flex justify-center mb-3">
-                          <img
-                            src={item.tenantPhoto}
-                            alt=""
-                            className="w-[130px] h-[210px] object-cover rounded-full"
-                          />
-                        </div>
-                        <div className="flex justify-between mb-1 mt-1">
-                          <p>
-                            Name:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {" "}
-                              {item.tenantName}
-                            </span>
-                          </p>
-                          <p>
-                            Email:{" "}
-                            <a href={`mailto:${item.tenantemailAddress}`}>
-                              <span style={{ fontWeight: 700 }}>
-                                {item.tenantemailAddress}
-                              </span>
-                            </a>
-                          </p>
-                        </div>
-                        <div className="flex justify-between mb-1 mt-1">
-                          <p>
-                            Phone:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.tenantMobile}
-                            </span>{" "}
-                          </p>
-                          <p>
-                            KRA:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.tenantkraPin}
-                            </span>{" "}
-                          </p>
-                        </div>
-                        <div className="flex justify-between mb-1 mt-1">
-                          <p>
-                            Marital Status:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.tenantMaritalStatus}
-                            </span>{" "}
-                          </p>
-                        </div>
-                        <div className="flex justify-between gap-4 mb-1 mt-1">
-                          <p>
-                            Property Assigned:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.propertyToOccupy}
-                            </span>
-                          </p>
-                          <p>
-                            Unit Assigned:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.unitAssigned}
-                            </span>
-                          </p>
-                        </div>
-                        <div className="flex justify-between mb-1 mt-1 gap-3 flex-wrap">
-                          <p>
-                            Paid Rent Deposit:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              {item.depositStatus}
-                            </span>{" "}
-                          </p>
-                          <p>
-                            Total Unpaid Dues:{" "}
-                            <span style={{ fontWeight: 700 }}>
-                              Ksh.{item.tenantUnPaidDues}
-                            </span>{" "}
-                          </p>
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <div>Created {moment(item.createdAt).fromNow()}</div>
-                          <div>Updated {moment(item.updatedAt).fromNow()}</div>
-                        </div>
-                        <div className="h-[4px] bg-zinc-500 mt-3 mb-3 rounded-md" />
-                        <div className="flex justify-between">
-                          <button
-                            className="bg-[#146C94] text-white p-[10px] rounded-md cursor-pointer"
-                            onClick={() => {
-                              setUpdateTenant(true);
-                              setTenantUpdateId(item._id);
-                              setupdateTenantName(item.tenantName);
-                              setupdateTenantemailAddress(
-                                item.tenantemailAddress
-                              );
-                              setupdateTenantIdNumber(item.tenantIdNumber);
-                              setupdateTenantkraPin(item.tenantkraPin);
-                              setupdateTenantMobile(item.tenantMobile);
-                              setupdateTenantMaritalStatus(
-                                item.tenantMaritalStatus
-                              );
-                              setupdatePropertyToOccupy(item.propertyToOccupy);
-                              setupdateunitAssigned(item.unitAssigned);
-                              setupdateDepositStatus(item.depositStatus);
-                              setupdateTenantUnPaidDues(item.tenantUnPaidDues);
-                              setupdateTenantPhoto(item.tenantPhoto);
-                            }}
-                          >
-                            Update {item.tenantName.split(" ")[0]}
-                          </button>
-                          <button
-                            className="bg-red-700 text-white p-[10px] rounded-md cursor-pointer"
-                            onClick={() => handleDeleteTenant(item._id)}
-                          >
-                            Vacate Tenant
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                    <table className="react-table">
+                      <thead>
+                        <th>TENANT NAME</th>
+                        <th>TENANT PHONE</th>
+                        <th>PROPERTY NAME</th>
+                        <th>UNIT NAME</th>
+                        <th>OCCUPATION DATE</th>
+                        <th>UNPAID DUES</th>
+                        <th>EDIT</th>
+                      </thead>
+                      <tbody>
+                        {records?.map((item) => (
+                          <tr key={item._id}>
+                            <td>{item.tenantName}</td>
+                            <td>{item.tenantMobile}</td>
+                            <td>{item.propertyToOccupy}</td>
+                            <td>{item.unitAssigned}</td>
+                            <td>{moment(item.createdAt).fromNow()}</td>
+                            <td>{item.tenantUnPaidDues}</td>
+                            <td>
+                              <p
+                                className="text-[#146C94] cursor-pointer"
+                                onClick={() => {
+                                  setUpdateTenant(true);
+                                  setTenantUpdateId(item._id);
+                                  setupdateTenantName(item.tenantName);
+                                  setupdateTenantemailAddress(
+                                    item.tenantemailAddress
+                                  );
+                                  setupdateTenantIdNumber(item.tenantIdNumber);
+                                  setupdateTenantkraPin(item.tenantkraPin);
+                                  setupdateTenantMobile(item.tenantMobile);
+                                  setupdateTenantMaritalStatus(
+                                    item.tenantMaritalStatus
+                                  );
+                                  setupdatePropertyToOccupy(
+                                    item.propertyToOccupy
+                                  );
+                                  setupdateunitAssigned(item.unitAssigned);
+                                  setupdateDepositStatus(item.depositStatus);
+                                  setupdateTenantUnPaidDues(
+                                    item.tenantUnPaidDues
+                                  );
+                                  setupdateTenantPhoto(item.tenantPhoto);
+                                }}
+                              >
+                                Edit {item.tenantName.split(" ")[0]}
+                              </p>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </>
                 )}
               </>
             )}
           </div>
+          {/*  */}
+          {/* nav numbers */}
+          <nav className="flex justify-end">
+            <ul className="flex gap-[2em] mt-[10px] px-[5px] py-[10px] items-center">
+              <li>
+                <a href="#" onClick={prevPage}>
+                  Prev
+                </a>
+              </li>
+
+              {/* map */}
+
+              {numbers.map((item, index) => (
+                <li
+                  key={index}
+                  className={`normal-nav ${
+                    currentPage === item && "active-nav"
+                  }`}
+                >
+                  <a href="#" onClick={() => changeCurrentPage(item)}>
+                    {item}
+                  </a>
+                </li>
+              ))}
+
+              <li>
+                <a href="#" onClick={nextPage}>
+                  Next
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
